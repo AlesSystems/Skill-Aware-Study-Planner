@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 from pydantic import BaseModel, Field, field_validator
 
 
@@ -43,3 +43,54 @@ class TopicPriority(BaseModel):
     course: Course
     priority_score: float
     urgency_factor: float
+
+
+class SkillHistory(BaseModel):
+    id: Optional[int] = None
+    topic_id: int
+    timestamp: datetime
+    previous_skill: float
+    new_skill: float
+    reason: str
+
+
+class StudySession(BaseModel):
+    id: Optional[int] = None
+    topic_id: int
+    start_time: datetime
+    end_time: Optional[datetime] = None
+    duration_minutes: Optional[float] = None
+
+
+class QuizQuestion(BaseModel):
+    id: Optional[int] = None
+    quiz_id: Optional[int] = None
+    question_text: str
+    option_a: str
+    option_b: str
+    option_c: str
+    option_d: str
+    correct_answer: str
+    
+    @field_validator('correct_answer')
+    @classmethod
+    def validate_correct_answer(cls, v):
+        if v not in ['A', 'B', 'C', 'D']:
+            raise ValueError('Correct answer must be A, B, C, or D')
+        return v
+
+
+class Quiz(BaseModel):
+    id: Optional[int] = None
+    topic_id: int
+    title: str
+    created_at: datetime
+    questions: List[QuizQuestion] = []
+
+
+class QuizAttempt(BaseModel):
+    id: Optional[int] = None
+    quiz_id: int
+    attempted_at: datetime
+    score: float
+    total_questions: int

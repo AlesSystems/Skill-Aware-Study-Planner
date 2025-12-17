@@ -1,6 +1,5 @@
-from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime, ForeignKey
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime, ForeignKey, Text
+from sqlalchemy.orm import sessionmaker, relationship, declarative_base
 
 Base = declarative_base()
 
@@ -25,6 +24,74 @@ class TopicDB(Base):
     skill_level = Column(Float, nullable=False)
     
     course = relationship("CourseDB", back_populates="topics")
+    skill_history = relationship("SkillHistoryDB", back_populates="topic", cascade="all, delete-orphan")
+    study_sessions = relationship("StudySessionDB", back_populates="topic", cascade="all, delete-orphan")
+    quizzes = relationship("QuizDB", back_populates="topic", cascade="all, delete-orphan")
+
+
+class SkillHistoryDB(Base):
+    __tablename__ = 'skill_history'
+    
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    topic_id = Column(Integer, ForeignKey('topics.id'), nullable=False)
+    timestamp = Column(DateTime, nullable=False)
+    previous_skill = Column(Float, nullable=False)
+    new_skill = Column(Float, nullable=False)
+    reason = Column(String, nullable=False)
+    
+    topic = relationship("TopicDB", back_populates="skill_history")
+
+
+class StudySessionDB(Base):
+    __tablename__ = 'study_sessions'
+    
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    topic_id = Column(Integer, ForeignKey('topics.id'), nullable=False)
+    start_time = Column(DateTime, nullable=False)
+    end_time = Column(DateTime, nullable=True)
+    duration_minutes = Column(Float, nullable=True)
+    
+    topic = relationship("TopicDB", back_populates="study_sessions")
+
+
+class QuizDB(Base):
+    __tablename__ = 'quizzes'
+    
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    topic_id = Column(Integer, ForeignKey('topics.id'), nullable=False)
+    title = Column(String, nullable=False)
+    created_at = Column(DateTime, nullable=False)
+    
+    topic = relationship("TopicDB", back_populates="quizzes")
+    questions = relationship("QuizQuestionDB", back_populates="quiz", cascade="all, delete-orphan")
+    attempts = relationship("QuizAttemptDB", back_populates="quiz", cascade="all, delete-orphan")
+
+
+class QuizQuestionDB(Base):
+    __tablename__ = 'quiz_questions'
+    
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    quiz_id = Column(Integer, ForeignKey('quizzes.id'), nullable=False)
+    question_text = Column(Text, nullable=False)
+    option_a = Column(String, nullable=False)
+    option_b = Column(String, nullable=False)
+    option_c = Column(String, nullable=False)
+    option_d = Column(String, nullable=False)
+    correct_answer = Column(String, nullable=False)
+    
+    quiz = relationship("QuizDB", back_populates="questions")
+
+
+class QuizAttemptDB(Base):
+    __tablename__ = 'quiz_attempts'
+    
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    quiz_id = Column(Integer, ForeignKey('quizzes.id'), nullable=False)
+    attempted_at = Column(DateTime, nullable=False)
+    score = Column(Float, nullable=False)
+    total_questions = Column(Integer, nullable=False)
+    
+    quiz = relationship("QuizDB", back_populates="attempts")
 
 
 class Database:

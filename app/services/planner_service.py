@@ -4,12 +4,23 @@ from app.storage.storage_service import StorageService
 from app.planner.priority_calculator import PriorityCalculator
 from app.planner.study_plan_generator import StudyPlanGenerator, StudyPlan
 from app.models.models import Course, Topic, TopicPriority
+from app.services.dependency_service import DependencyService
+from app.services.decision_service import DecisionService
+from app.services.optimization_service import OptimizationEngine
+from app.services.scenario_service import ScenarioSimulator
 
 
 class PlannerService:
     def __init__(self, storage_service: StorageService):
         self.storage = storage_service
         self.priority_calculator = PriorityCalculator()
+        self.dependency_service = DependencyService(storage_service.db)
+        self.decision_service = DecisionService(storage_service.db)
+        self.optimization_engine = OptimizationEngine(
+            self.dependency_service, 
+            self.decision_service
+        )
+        self.scenario_simulator = ScenarioSimulator(self.optimization_engine)
     
     def calculate_all_priorities(self) -> List[TopicPriority]:
         """Calculate priorities for all topics across all courses."""
@@ -135,10 +146,63 @@ class PlannerService:
         else:
             priorities = self.calculate_all_priorities()
         
+        priorities = self.optimization_engine.adjust_priorities_for_dependencies(priorities)
+        
         if optimize:
-            return StudyPlanGenerator.optimize_plan(priorities, available_hours)
+            allocated = self.optimization_engine.optimize_time_allocation(
+                priorities, available_hours
+            )
+            
+            plan = StudyPlan(daily_hours=available_hours)
+            plan.allocated_topics = allocated
+            return plan
         else:
             return StudyPlanGenerator.generate_daily_plan(priorities, available_hours)
+    
+    def get_expected_scores(self) -> Dict:
+        """Get expected exam scores for all courses."""
+        topics = self.storage.get_all_topics()
+        courses = self.storage.get_all_courses()
+        return self.optimization_engine.calculate_expected_score(topics, courses)
+    
+    def identify_risks(self) -> List[Dict]:
+        """Identify risk factors across all courses."""
+        topics = self.storage.get_all_topics()
+        courses = self.storage.get_all_courses()
+        return self.optimization_engine.identify_risks(topics, courses)
+    
+    def suggest_skip_topics(self, available_hours: float) -> List[Dict]:
+        """Get suggestions for topics that can be skipped."""
+        priorities = self.calculate_adaptive_priorities()
+        return self.optimization_engine.suggest_topics_to_skip(priorities, available_hours)
+    
+    def simulate_scenario(self, scenario_type: str, **kwargs) -> Dict:
+        """Run a what-if scenario simulation."""
+        topics = self.storage.get_all_topics()
+        courses = self.storage.get_all_courses()
+        priorities = self.calculate_adaptive_priorities()
+        
+        if scenario_type == 'hours_change':
+            return self.scenario_simulator.simulate_study_hours_change(
+                topics, courses, priorities, 
+                kwargs['current_hours'], kwargs['new_hours']
+            )
+        elif scenario_type == 'ignore_low_weight':
+            return self.scenario_simulator.simulate_ignore_low_weight(
+                topics, courses, priorities,
+                kwargs['available_hours'], kwargs.get('weight_threshold', 0.1)
+            )
+        elif scenario_type == 'exam_date_change':
+            return self.scenario_simulator.simulate_exam_date_change(
+                topics, courses, priorities,
+                kwargs['course_id'], kwargs['days_shift']
+            )
+        elif scenario_type == 'compare_strategies':
+            return self.scenario_simulator.compare_strategies(
+                topics, courses, priorities, kwargs['available_hours']
+            )
+        else:
+            raise ValueError(f"Unknown scenario type: {scenario_type}")
     
     def validate_course_topics(self, course_id: int) -> dict:
         """Validate that topic weights sum to approximately 1.0 for a course."""

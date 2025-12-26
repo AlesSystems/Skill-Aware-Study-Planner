@@ -1,365 +1,225 @@
-Phase 1 — Foundation (MVP)
+# Phase 3 — Intelligence & Decision Layer
 
-Goal: Build a working Skill-Aware Study Planner that can model courses, topics, skills, and generate a daily study plan based on priority.
-
----
-
-## TICKET-001: Project Initialization & Repo Setup
-
-**Type:** Task  
-**Priority:** High  
-
-### Description
-Initialize the project repository and basic structure for Phase 1 development.
-
-### Acceptance Criteria
-- Repository initialized
-- Clear folder structure
-- README with project description and Phase 1 scope
-- Basic run instructions included
-
-### Tasks
-- Create repository
-- Define folder structure
-- Add `.gitignore`
-- Write initial README
+Goal: Add higher-level reasoning so the planner makes informed decisions under constraints, not just recalculations.
 
 ---
 
-## TICKET-002: Define Core Data Models
-
-**Type:** Feature  
-**Priority:** High  
-
-### Description
-Create core data models to represent courses, topics, and exams.
-
-### Data Models
-- Course
-  - id
-  - name
-  - exam_date
-- Topic
-  - id
-  - course_id
-  - name
-  - weight (0–1)
-  - skill_level (0–100)
-
-### Acceptance Criteria
-- Models are clearly defined
-- Can be serialized/deserialized
-- Stored locally (JSON or SQLite)
-
----
-
-## TICKET-003: Implement Local Storage Layer
-
-**Type:** Task  
-**Priority:** High  
-
-### Description
-Implement a simple persistence layer to store courses and topics.
-
-### Acceptance Criteria
-- Data persists between runs
-- Can load/save courses and topics
-- No external dependencies required
-
-### Notes
-Preferred options:
-- JSON files (simple)
-- SQLite (slightly more robust)
-
----
-
-## TICKET-004: Priority Calculation Engine
+## TICKET-301: Topic Dependency Graph
 
 **Type:** Feature  
 **Priority:** Critical  
 
 ### Description
-Implement the core priority calculation logic for study planning.
+Model dependencies between topics (prerequisites and follow-ups).
 
-### Formula
-priority = topic_weight × (1 - skill_level / 100) × urgency
+### Examples
+- Recursion → Dynamic Programming
+- Graph Basics → Shortest Path Algorithms
 
-yaml
-Copy code
-
-Where:
-- urgency increases as exam date approaches
+### Requirements
+- Directed dependency graph
+- Detect circular dependencies
+- Support multiple prerequisites
 
 ### Acceptance Criteria
-- Each topic receives a numeric priority score
-- Topics can be sorted by priority
-- Logic is isolated and testable
+- Dependencies stored and validated
+- Planner respects prerequisite order
+- Blocked topics are deprioritized automatically
 
 ---
 
-## TICKET-005: Urgency Calculation Logic
+## TICKET-302: Dependency-Aware Priority Adjustment
 
-**Type:** Task  
-**Priority:** High  
+**Type:** Feature  
+**Priority:** Critical  
 
 ### Description
-Implement urgency calculation based on exam proximity.
+Adjust topic priorities based on dependency status.
 
-### Rules (Initial Version)
-- >30 days remaining → low urgency
-- 7–30 days → medium urgency
-- <7 days → high urgency
+### Rules
+- If prerequisite skill < threshold → boost prerequisite priority
+- Dependent topic priority capped until prerequisite improves
 
 ### Acceptance Criteria
-- Urgency factor returned as a multiplier
-- Logic documented and adjustable
+- Planner never recommends advanced topics too early
+- Prerequisites rise naturally in plan
 
 ---
 
-## TICKET-006: Daily Study Plan Generator
+## TICKET-303: Time Constraint Optimization Engine
 
 **Type:** Feature  
 **Priority:** High  
 
 ### Description
-Generate a daily study plan based on available study hours and topic priorities.
+Optimize study allocation under limited available time.
 
 ### Inputs
-- Available hours per day
-- Sorted topic priorities
+- Daily available hours
+- Exam proximity
+- Topic priority
+- Dependency constraints
 
 ### Output
-- Ordered list of topics
-- Allocated time per topic
+- Optimal subset of topics
+- Time allocation per topic
 
 ### Acceptance Criteria
-- Total allocated time ≤ available hours
-- Higher priority topics get more time
-- Plan regenerates correctly when data changes
+- Total allocated time ≤ available time
+- Low-value topics dropped when time is scarce
+- High-impact topics preserved
 
 ---
 
-## TICKET-007: Basic User Interface (CLI or Minimal Web)
+## TICKET-304: What-If Scenario Simulator
 
-**Type:** Task  
-**Priority:** Medium  
+**Type:** Feature  
+**Priority:** High  
 
 ### Description
-Create a minimal interface to interact with the system.
+Allow users to simulate different study strategies.
 
-### Features
-- Add/edit courses
-- Add/edit topics
-- Set available study hours
-- Generate daily plan
+### Scenarios
+- “What if I study 2h/day instead of 4?”
+- “What if I ignore low-weight topics?”
+- “What if exam is moved earlier?”
 
 ### Acceptance Criteria
-- User can create a course and topics
-- User can generate and view a daily plan
-- No styling required
+- Simulations do not modify real data
+- Results include projected skill levels
+- Clear comparison output
 
 ---
 
-## TICKET-008: Validation & Edge Case Handling
+## TICKET-305: Expected Exam Score Estimator
 
-**Type:** Task  
+**Type:** Feature  
+**Priority:** High  
+
+### Description
+Estimate expected exam performance based on current skills and weights.
+
+### Model
+- Weighted sum of topic skills
+- Penalty for dependencies not satisfied
+- Uncertainty margin included
+
+### Output
+- Estimated score range
+- Risk indicators per topic
+
+### Acceptance Criteria
+- Estimates update dynamically
+- High-risk topics clearly identified
+- Model behavior documented
+
+---
+
+## TICKET-306: Study Strategy Comparison Engine
+
+**Type:** Feature  
 **Priority:** Medium  
 
 ### Description
-Handle invalid or missing inputs gracefully.
+Compare multiple study strategies and rank them.
+
+### Strategies
+- Balanced revision
+- High-weight focus
+- Weak-topic focus
+
+### Acceptance Criteria
+- Strategies evaluated on same constraints
+- Clear ranking provided
+- Best strategy highlighted with explanation
+
+---
+
+## TICKET-307: Drop-or-Skip Topic Advisor
+
+**Type:** Feature  
+**Priority:** Medium  
+
+### Description
+Advise the user when a topic is not worth studying given constraints.
+
+### Criteria
+- Low weight
+- High time cost
+- Low dependency impact
+- Imminent exam
+
+### Acceptance Criteria
+- Advisor explains reasoning
+- User can override advice
+- Decisions logged
+
+---
+
+## TICKET-308: Risk Analysis & Warning System
+
+**Type:** Feature  
+**Priority:** High  
+
+### Description
+Identify risk factors that threaten exam success.
+
+### Risk Examples
+- Critical prerequisite not mastered
+- Overconfidence (high self-assessment, low quiz score)
+- Insufficient remaining time
+
+### Acceptance Criteria
+- Risks listed clearly
+- Severity levels assigned
+- Risks affect planning decisions
+
+---
+
+## TICKET-309: Decision Trace & Explainability
+
+**Type:** Feature  
+**Priority:** Medium  
+
+### Description
+Expose why the planner made specific recommendations.
 
 ### Examples
-- No topics defined
-- Exam date in the past
-- Weights not summing to 1
-- Skill level outside 0–100
+- “Topic X prioritized because weight=0.3 and skill=45”
+- “Topic Y delayed due to unmet prerequisite”
 
 ### Acceptance Criteria
-- Clear error messages
-- Application does not crash
+- Planner outputs explanations
+- Decisions are traceable
+- Logic is transparent to user
 
 ---
 
-## TICKET-009: Phase 1 Documentation
+## TICKET-310: Phase 3 Documentation
 
 **Type:** Task  
 **Priority:** Medium  
 
 ### Description
-Document Phase 1 design decisions and usage.
+Document the intelligence layer.
+
+### Content
+- Dependency graph design
+- Optimization logic
+- Score estimation model
+- Decision explainability
 
 ### Acceptance Criteria
-- Updated README
-- Explanation of priority formula
-- Instructions to run Phase 1 MVP
+- README updated
+- Examples provided
+- Phase 3 behavior clearly understood
 
 ---
 
-## Phase 1 Definition of Done
+## Phase 3 Definition of Done
 
-- User can model a course and topics
-- System calculates priorities correctly
-- Daily study plan is generated
-- Data persists locally
-- Logic works without UI polish
-If you want, next I can:
-
-🧱 Convert these tickets into GitHub Issues
-
-🧠 Provide exact data schemas
-
-⚙️ Give you a starter folder structure + boilerplate
-
-🔢 Refine the priority formula mathematically
-
-Just tell me the next move.
-
-
-
-
-
-
-
-You said:
-What should I use for this app, what language and framework
-
-
-ChatGPT said:
-Short answer first, then reasoning.
-
-✅ My Recommendation (Best Fit for You)
-Language: Python
-Framework: FastAPI (backend) + SQLite
-UI (Phase 1): CLI or very thin web UI
-Later UI: React / simple HTML
-
-This is the highest signal / lowest bullshit stack for this project.
-
-Why Python is the Right Choice Here
-You are not building a game engine or anti-cheat kernel driver here.
-This project is about:
-
-algorithms
-
-prioritization logic
-
-data modeling
-
-adaptability
-
-iteration speed
-
-Python wins hard on:
-
-⚡ Fast iteration
-
-🧠 Clear logic expression
-
-📊 Math & heuristics
-
-🧪 Easy testing
-
-🤖 Future AI/ML extension
-
-Recruiters will not downgrade you for Python on a planner app.
-They will downgrade you for an over-engineered stack.
-
-Why FastAPI (Not Django)
-Feature	FastAPI	Django
-Boilerplate	Low	High
-API-first	Yes	Meh
-Performance	Excellent	Fine
-Learning value	High	Lower
-Control	Full	Opinionated
-
-FastAPI gives you:
-
-clean separation of logic
-
-type hints (important!)
-
-auto docs
-
-future mobile / web / CLI reuse
-
-Why SQLite
-Zero setup
-
-Perfect for single-user study tool
-
-Can migrate later to Postgres
-
-Forces you to design schemas properly
-
-JSON is fine for Week 1, SQLite is better for Week 2+.
-
-Phase 1 Stack (Final)
-text
-Copy code
-Backend logic: Python 3.11+
-Framework: FastAPI
-Persistence: SQLite
-ORM: SQLAlchemy (optional but recommended)
-Interface: CLI OR minimal web UI
-Alternative Stacks (When They Make Sense)
-Option B — Node.js (If You Want Frontend First)
-Use if:
-
-you want heavy UI early
-
-you think in JS naturally
-
-text
-Copy code
-Language: TypeScript
-Backend: NestJS or Express
-DB: SQLite
-Downside: more ceremony, slower logic iteration.
-
-Option C — Java (If You Want Max Academic Rigor)
-Use if:
-
-you want very formal architecture
-
-you enjoy verbosity
-
-text
-Copy code
-Language: Java
-Framework: Spring Boot
-DB: H2 / SQLite
-Downside: slower to iterate, less fun.
-
-What I Do NOT Recommend (Yet)
-❌ C++ — wrong abstraction level
-❌ Rust — great, but slows iteration here
-❌ Flutter — UI-first, logic second
-❌ Full React + backend on day 1 — premature
-
-Folder Structure (Recommended)
-text
-Copy code
-study-planner/
-├── app/
-│   ├── models/
-│   ├── services/
-│   ├── api/
-│   ├── planner/
-│   └── storage/
-├── tests/
-├── main.py
-├── README.md
-└── requirements.txt
-Final Verdict
-Python + FastAPI + SQLite
-
-Fast to build
-
-Easy to reason about
-
-Easy to evolve
-
-Looks clean on a CV
-
-Lets the idea shine
-
+- Planner respects topic dependencies
+- Decisions adapt to time pressure
+- Users can simulate strategies
+- Planner explains its decisions
+- System advises what to skip

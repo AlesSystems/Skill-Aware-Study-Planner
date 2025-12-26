@@ -44,9 +44,17 @@ class CLI:
         print("\n--- Progress & Analytics ---")
         print("15. View Progress Charts")
         print("16. View Weakest Topics Summary")
+        print("\n--- Intelligence & Decision Layer (Phase 3) ---")
+        print("17. Manage Topic Dependencies")
+        print("18. View Expected Exam Scores")
+        print("19. Risk Analysis")
+        print("20. What-If Scenario Simulator")
+        print("21. Compare Study Strategies")
+        print("22. Get Skip Topic Suggestions")
+        print("23. View Decision Log")
         print("\n--- System ---")
-        print("17. Apply Skill Decay")
-        print("18. Exit")
+        print("24. Apply Skill Decay")
+        print("25. Exit")
         print("\n" + "-"*50)
     
     def add_course(self):
@@ -659,6 +667,334 @@ class CLI:
         print("\n✓ Skill decay applied successfully!")
         print("   Check skill history to see changes.")
     
+    def manage_dependencies(self):
+        print("\n--- Manage Topic Dependencies ---")
+        print("\n1. Add Dependency")
+        print("2. View Dependencies for Topic")
+        print("3. View Dependency Graph")
+        print("4. Get Learning Path to Topic")
+        print("5. Remove Dependency")
+        
+        choice = input("\nSelect option: ").strip()
+        
+        if choice == '1':
+            self._add_dependency()
+        elif choice == '2':
+            self._view_dependencies()
+        elif choice == '3':
+            self._view_dependency_graph()
+        elif choice == '4':
+            self._get_learning_path()
+        elif choice == '5':
+            self._remove_dependency()
+    
+    def _add_dependency(self):
+        all_topics = self.storage.get_all_topics()
+        if len(all_topics) < 2:
+            print("\nNeed at least 2 topics to create dependencies.")
+            return
+        
+        print("\nAvailable Topics:")
+        for topic in all_topics:
+            course = self.storage.get_course(topic.course_id)
+            print(f"  {topic.id}. {topic.name} ({course.name})")
+        
+        try:
+            prereq_id = int(input("\nPrerequisite topic ID: "))
+            dependent_id = int(input("Dependent topic ID (requires prerequisite): "))
+            threshold = float(input("Minimum skill threshold (default 70): ") or "70")
+            
+            self.planner.dependency_service.add_dependency(
+                prereq_id, dependent_id, threshold
+            )
+            
+            prereq = self.storage.get_topic(prereq_id)
+            dependent = self.storage.get_topic(dependent_id)
+            print(f"\n✓ Dependency added: '{prereq.name}' → '{dependent.name}' (threshold: {threshold}%)")
+        except ValueError as e:
+            print(f"\n✗ Error: {e}")
+        except Exception as e:
+            print(f"\n✗ Error: {e}")
+    
+    def _view_dependencies(self):
+        all_topics = self.storage.get_all_topics()
+        if not all_topics:
+            print("\nNo topics available.")
+            return
+        
+        print("\nAvailable Topics:")
+        for topic in all_topics:
+            course = self.storage.get_course(topic.course_id)
+            print(f"  {topic.id}. {topic.name} ({course.name})")
+        
+        try:
+            topic_id = int(input("\nSelect topic ID: "))
+            topic = self.storage.get_topic(topic_id)
+            
+            print(f"\n--- Dependencies for '{topic.name}' ---\n")
+            
+            prereqs = self.planner.dependency_service.get_prerequisites(topic_id)
+            if prereqs:
+                print("Prerequisites:")
+                for p in prereqs:
+                    status = "✓" if p['is_satisfied'] else "✗"
+                    print(f"  {status} {p['prerequisite_name']}: {p['current_skill']:.1f}% / {p['required_skill']:.1f}%")
+            else:
+                print("No prerequisites")
+            
+            print()
+            dependents = self.planner.dependency_service.get_dependents(topic_id)
+            if dependents:
+                print("Unlocks:")
+                for d in dependents:
+                    print(f"  → {d['dependent_name']} (requires {d['required_skill']:.1f}%)")
+            else:
+                print("No dependent topics")
+        except Exception as e:
+            print(f"\n✗ Error: {e}")
+    
+    def _view_dependency_graph(self):
+        graph = self.planner.dependency_service.get_dependency_graph()
+        
+        print("\n--- Dependency Graph ---\n")
+        print(f"Total Topics: {len(graph['nodes'])}")
+        print(f"Total Dependencies: {len(graph['edges'])}\n")
+        
+        if graph['edges']:
+            print("Dependencies:")
+            for edge in graph['edges']:
+                from_node = next(n for n in graph['nodes'] if n['id'] == edge['from'])
+                to_node = next(n for n in graph['nodes'] if n['id'] == edge['to'])
+                print(f"  {from_node['name']} → {to_node['name']} (threshold: {edge['threshold']}%)")
+        else:
+            print("No dependencies defined yet.")
+    
+    def _get_learning_path(self):
+        all_topics = self.storage.get_all_topics()
+        if not all_topics:
+            print("\nNo topics available.")
+            return
+        
+        print("\nAvailable Topics:")
+        for topic in all_topics:
+            course = self.storage.get_course(topic.course_id)
+            print(f"  {topic.id}. {topic.name} ({course.name})")
+        
+        try:
+            topic_id = int(input("\nTarget topic ID: "))
+            path = self.planner.dependency_service.get_learning_path(topic_id)
+            
+            print("\n--- Recommended Learning Path ---\n")
+            for i, tid in enumerate(path, 1):
+                t = self.storage.get_topic(tid)
+                print(f"{i}. {t.name} (skill: {t.skill_level:.1f}%)")
+        except Exception as e:
+            print(f"\n✗ Error: {e}")
+    
+    def _remove_dependency(self):
+        graph = self.planner.dependency_service.get_dependency_graph()
+        
+        if not graph['edges']:
+            print("\nNo dependencies to remove.")
+            return
+        
+        print("\nExisting Dependencies:")
+        for i, edge in enumerate(graph['edges'], 1):
+            from_node = next(n for n in graph['nodes'] if n['id'] == edge['from'])
+            to_node = next(n for n in graph['nodes'] if n['id'] == edge['to'])
+            print(f"  {i}. {from_node['name']} → {to_node['name']}")
+        
+        try:
+            choice = int(input("\nSelect dependency number to remove: "))
+            if 1 <= choice <= len(graph['edges']):
+                edge = graph['edges'][choice - 1]
+                
+                session = self.storage.db.get_session()
+                from app.storage.database import TopicDependencyDB
+                dep = session.query(TopicDependencyDB).filter(
+                    TopicDependencyDB.prerequisite_topic_id == edge['from'],
+                    TopicDependencyDB.dependent_topic_id == edge['to']
+                ).first()
+                
+                if dep:
+                    self.planner.dependency_service.remove_dependency(dep.id)
+                    print("\n✓ Dependency removed.")
+                session.close()
+        except Exception as e:
+            print(f"\n✗ Error: {e}")
+    
+    def view_expected_scores(self):
+        print("\n--- Expected Exam Scores ---\n")
+        scores = self.planner.get_expected_scores()
+        
+        if not scores:
+            print("No courses with topics found.")
+            return
+        
+        for course_id, data in scores.items():
+            print(f"Course: {data['course_name']}")
+            print(f"  Expected Score: {data['estimated_score']:.1f}%")
+            print(f"  Score Range: {data['score_range'][0]:.1f}% - {data['score_range'][1]:.1f}%")
+            print(f"  Weight Coverage: {data['total_weight_coverage']:.2f}")
+            
+            if data['dependency_penalty'] > 0:
+                print(f"  ⚠ Dependency Penalty: -{data['dependency_penalty']:.1f}%")
+            
+            if data['high_risk_topics']:
+                print(f"  🔴 High-Risk Topics ({len(data['high_risk_topics'])}):")
+                for risk in data['high_risk_topics'][:3]:
+                    print(f"     - {risk['topic']} (weight: {risk['weight']:.2f})")
+            print()
+    
+    def view_risk_analysis(self):
+        print("\n--- Risk Analysis ---\n")
+        risks = self.planner.identify_risks()
+        
+        if not risks:
+            print("✓ No significant risks detected. Keep up the good work!")
+            return
+        
+        print(f"Found {len(risks)} risk factors:\n")
+        
+        for i, risk in enumerate(risks[:10], 1):
+            severity_color = {
+                'CRITICAL': '🔴',
+                'HIGH': '🟠',
+                'MEDIUM': '🟡',
+                'LOW': '🟢'
+            }
+            
+            print(f"{i}. {severity_color.get(risk['severity'], '⚪')} [{risk['severity']}] {risk['type'].upper()}")
+            print(f"   Course: {risk['course']}")
+            print(f"   {risk['description']}")
+            print()
+    
+    def simulate_scenario(self):
+        print("\n--- What-If Scenario Simulator ---")
+        print("\n1. Change Daily Study Hours")
+        print("2. Ignore Low-Weight Topics")
+        print("3. Move Exam Date")
+        
+        choice = input("\nSelect scenario: ").strip()
+        
+        try:
+            if choice == '1':
+                current = float(input("Current daily hours: "))
+                new = float(input("Simulated daily hours: "))
+                result = self.planner.simulate_scenario(
+                    'hours_change', 
+                    current_hours=current, 
+                    new_hours=new
+                )
+                self._display_scenario_result(result)
+            
+            elif choice == '2':
+                hours = float(input("Available hours: "))
+                threshold = float(input("Weight threshold (default 0.1): ") or "0.1")
+                result = self.planner.simulate_scenario(
+                    'ignore_low_weight',
+                    available_hours=hours,
+                    weight_threshold=threshold
+                )
+                self._display_scenario_result(result)
+            
+            elif choice == '3':
+                courses = self.storage.get_all_courses()
+                print("\nCourses:")
+                for c in courses:
+                    print(f"  {c.id}. {c.name}")
+                
+                course_id = int(input("\nSelect course ID: "))
+                days = int(input("Days to shift (negative = earlier, positive = later): "))
+                result = self.planner.simulate_scenario(
+                    'exam_date_change',
+                    course_id=course_id,
+                    days_shift=days
+                )
+                self._display_scenario_result(result)
+        
+        except Exception as e:
+            print(f"\n✗ Error: {e}")
+    
+    def _display_scenario_result(self, result):
+        print(f"\n--- Simulation Results: {result['scenario']} ---\n")
+        
+        for key, value in result.items():
+            if key == 'scenario':
+                continue
+            elif isinstance(value, dict):
+                print(f"{key}:")
+                for k, v in value.items():
+                    print(f"  {k}: {v}")
+            elif isinstance(value, list):
+                print(f"{key}: {len(value)} items")
+            else:
+                print(f"{key}: {value}")
+        print()
+    
+    def compare_strategies(self):
+        print("\n--- Compare Study Strategies ---\n")
+        
+        try:
+            hours = float(input("Available daily hours: "))
+            result = self.planner.simulate_scenario('compare_strategies', available_hours=hours)
+            
+            print("\n--- Strategy Comparison ---\n")
+            
+            for strategy_id, strategy in result['strategies'].items():
+                print(f"{strategy['name']}:")
+                print(f"  {strategy['description']}")
+                print(f"  Topics Covered: {strategy['topics_covered']}")
+                
+                total_score = sum(
+                    s['estimated_score'] 
+                    for s in strategy['expected_scores'].values()
+                )
+                print(f"  Total Expected Score: {total_score:.1f}")
+                print()
+            
+            print(f"🏆 Best Strategy: {result['best_strategy_name']}")
+            print(f"   Reason: {result['reason']}")
+        
+        except Exception as e:
+            print(f"\n✗ Error: {e}")
+    
+    def view_skip_suggestions(self):
+        print("\n--- Skip Topic Suggestions ---\n")
+        
+        try:
+            hours = float(input("Available daily hours: "))
+            suggestions = self.planner.suggest_skip_topics(hours)
+            
+            if not suggestions:
+                print("✓ No topics recommended to skip. You have adequate time!")
+                return
+            
+            print(f"Found {len(suggestions)} topics you might consider skipping:\n")
+            
+            for i, s in enumerate(suggestions, 1):
+                print(f"{i}. {s['topic']}")
+                print(f"   Reason: {s['reason']}")
+                print(f"   Weight: {s['weight']:.2f}, Skill: {s['skill_level']:.1f}%")
+                print(f"   Est. Time Saved: {s['time_saved_estimate']:.1f}h")
+                print()
+        
+        except Exception as e:
+            print(f"\n✗ Error: {e}")
+    
+    def view_decision_log(self):
+        print("\n--- Decision Log ---\n")
+        decisions = self.planner.decision_service.get_recent_decisions(limit=15)
+        
+        if not decisions:
+            print("No decisions logged yet.")
+            return
+        
+        for d in decisions:
+            print(f"[{d['timestamp'].strftime('%Y-%m-%d %H:%M')}] {d['decision_type'].upper()}")
+            print(f"  {d['explanation']}")
+            print()
+    
     def update_skill(self):
         print("\n⚠ This feature has been replaced by:")
         print("   - Option 10: Manual Skill Self-Assessment")
@@ -670,7 +1006,7 @@ class CLI:
         
         while True:
             self.display_menu()
-            choice = input("Select an option (1-18): ").strip()
+            choice = input("Select an option (1-25): ").strip()
             
             if choice == '1':
                 self.add_course()
@@ -705,8 +1041,22 @@ class CLI:
             elif choice == '16':
                 self.view_weakest_topics_summary()
             elif choice == '17':
-                self.apply_skill_decay()
+                self.manage_dependencies()
             elif choice == '18':
+                self.view_expected_scores()
+            elif choice == '19':
+                self.view_risk_analysis()
+            elif choice == '20':
+                self.simulate_scenario()
+            elif choice == '21':
+                self.compare_strategies()
+            elif choice == '22':
+                self.view_skip_suggestions()
+            elif choice == '23':
+                self.view_decision_log()
+            elif choice == '24':
+                self.apply_skill_decay()
+            elif choice == '25':
                 print("\n👋 Goodbye! Happy studying!")
                 sys.exit(0)
             else:

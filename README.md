@@ -12,7 +12,7 @@ An intelligent, adaptive study planning system that learns from your performance
 - ✅ Local data persistence with SQLite
 - ✅ CLI interface
 
-### Phase 2 - Skill Tracking & Adaptation (Current)
+### Phase 2 - Skill Tracking & Adaptation
 - ✅ **Skill History Tracking**: Complete audit trail of skill changes
 - ✅ **Quiz Engine**: MCQ-based quizzes (5-10 questions per quiz)
 - ✅ **Intelligent Skill Updates**: Automatic adjustment based on quiz performance
@@ -22,6 +22,17 @@ An intelligent, adaptive study planning system that learns from your performance
 - ✅ **Weak Topic Detection**: Automatic identification of topics needing attention
 - ✅ **Adaptive Priority Recalculation**: Dynamic planning based on learning trends
 - ✅ **Progress Visualization**: Charts for skill progress and study time
+
+### Phase 3 - Intelligence & Decision Layer (NEW!)
+- ✅ **Topic Dependency Graph**: Model prerequisite relationships between topics
+- ✅ **Dependency-Aware Priority Adjustment**: Automatic boosting of prerequisites
+- ✅ **Time Constraint Optimization**: Intelligent time allocation under constraints
+- ✅ **Expected Exam Score Estimator**: Predict exam performance with confidence ranges
+- ✅ **Risk Analysis System**: Identify critical weaknesses and time pressure risks
+- ✅ **What-If Scenario Simulator**: Test different study strategies before committing
+- ✅ **Study Strategy Comparison**: Compare balanced, high-weight, and weak-focus strategies
+- ✅ **Drop-or-Skip Topic Advisor**: Recommendations on which topics to skip when time-limited
+- ✅ **Decision Trace & Explainability**: Full transparency on why the planner makes recommendations
 
 ## Installation
 
@@ -77,9 +88,18 @@ python main.py
 15. View Progress Charts
 16. View Weakest Topics Summary
 
+--- Intelligence & Decision Layer (Phase 3) ---
+17. Manage Topic Dependencies
+18. View Expected Exam Scores
+19. Risk Analysis
+20. What-If Scenario Simulator
+21. Compare Study Strategies
+22. Get Skip Topic Suggestions
+23. View Decision Log
+
 --- System ---
-17. Apply Skill Decay
-18. Exit
+24. Apply Skill Decay
+25. Exit
 ```
 
 ## Priority Formula
@@ -153,6 +173,10 @@ study-planner/
 - `quiz_questions`: MCQ questions with answers
 - `quiz_attempts`: Quiz submission records with scores
 
+### Phase 3 Tables
+- `topic_dependencies`: Prerequisite relationships between topics
+- `decision_logs`: Audit trail of planner decisions with explanations
+
 ## Development Status
 
 ### Phase 1 (MVP) - ✅ Complete
@@ -174,6 +198,17 @@ study-planner/
 - Adaptive priority recalculation
 - Progress visualization
 
+### Phase 3 (Intelligence & Decision Layer) - ✅ Complete
+- Topic dependency graph with cycle detection
+- Dependency-aware priority adjustment
+- Time constraint optimization engine
+- Expected exam score estimation
+- Risk analysis and warning system
+- What-if scenario simulator
+- Study strategy comparison
+- Drop-or-skip topic advisor
+- Decision trace and explainability
+
 ## Documentation
 
 - **Phase 2 Features**: See [docs/PHASE2_DOCUMENTATION.md](docs/PHASE2_DOCUMENTATION.md)
@@ -192,13 +227,15 @@ See [docs/PHASE2_DOCUMENTATION.md](docs/PHASE2_DOCUMENTATION.md) for detailed co
 
 ## Future Enhancements
 
-### Potential Phase 3+
+### Potential Phase 4+
 - Machine learning for personalized decay rates
 - Spaced repetition system (SRS) integration
-- Advanced analytics and predictions
+- Multi-exam scheduling optimization
 - Study group collaboration features
-- Web/mobile interface
+- Web/mobile interface with REST API
 - Cloud sync and multi-device support
+- PDF/document ingestion for automated topic extraction
+- Integration with calendar apps
 
 ## License
 

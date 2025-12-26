@@ -94,6 +94,26 @@ class QuizAttemptDB(Base):
     quiz = relationship("QuizDB", back_populates="attempts")
 
 
+class TopicDependencyDB(Base):
+    __tablename__ = 'topic_dependencies'
+    
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    prerequisite_topic_id = Column(Integer, ForeignKey('topics.id'), nullable=False)
+    dependent_topic_id = Column(Integer, ForeignKey('topics.id'), nullable=False)
+    min_skill_threshold = Column(Float, default=70.0)
+
+
+class DecisionLogDB(Base):
+    __tablename__ = 'decision_logs'
+    
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    timestamp = Column(DateTime, nullable=False)
+    decision_type = Column(String, nullable=False)
+    topic_id = Column(Integer, ForeignKey('topics.id'), nullable=True)
+    explanation = Column(Text, nullable=False)
+    metadata = Column(Text, nullable=True)
+
+
 class Database:
     def __init__(self, db_path: str = "study_planner.db"):
         self.engine = create_engine(f'sqlite:///{db_path}')

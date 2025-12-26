@@ -111,7 +111,7 @@ class DecisionLogDB(Base):
     decision_type = Column(String, nullable=False)
     topic_id = Column(Integer, ForeignKey('topics.id'), nullable=True)
     explanation = Column(Text, nullable=False)
-    metadata = Column(Text, nullable=True)
+    meta_data = Column(Text, nullable=True)
 
 
 class Database:

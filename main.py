@@ -6,6 +6,9 @@ from app.services.quiz_service import QuizService
 from app.services.skill_tracking_service import SkillTrackingService
 from app.services.study_session_service import StudySessionService
 from app.services.progress_service import ProgressVisualizationService
+from app.services.honesty_service import HonestyService
+from app.services.exam_simulation_service import ExamSimulationService
+from app.services.reprioritization_service import ForcedReprioritizationEngine, ConsequenceEngine
 from app.models.models import Course, Topic, Quiz, QuizQuestion
 
 
@@ -17,6 +20,11 @@ class CLI:
         self.skill_tracking = SkillTrackingService(self.storage.db)
         self.study_session = StudySessionService(self.storage.db)
         self.progress_viz = ProgressVisualizationService(self.storage)
+        # Phase 4: Honesty & Reality Check System
+        self.honesty_service = HonestyService(self.storage.db)
+        self.exam_sim_service = ExamSimulationService(self.storage.db)
+        self.reprioritization = ForcedReprioritizationEngine(self.storage.db)
+        self.consequence_engine = ConsequenceEngine(self.storage.db)
     
     def display_menu(self):
         print("\n" + "="*50)
@@ -52,6 +60,15 @@ class CLI:
         print("21. Compare Study Strategies")
         print("22. Get Skip Topic Suggestions")
         print("23. View Decision Log")
+        print("\n--- Honesty & Reality Check (Phase 4) ---")
+        print("26. Simulate Exam Today")
+        print("27. Motivation vs Reality Dashboard")
+        print("28. Detect Fake Productivity")
+        print("29. Check Avoidance Patterns")
+        print("30. Detect Overconfidence")
+        print("31. View All Honesty Warnings")
+        print("32. Toggle Brutal Honesty Mode")
+        print("33. Check Forced Re-Prioritization")
         print("\n--- System ---")
         print("24. Apply Skill Decay")
         print("25. Exit")
@@ -1001,12 +1018,328 @@ class CLI:
         print("   - Option 13: Take Quiz (auto-updates skill)")
         print("\nPlease use those options instead.")
     
+    # ===== PHASE 4: HONESTY & REALITY CHECK METHODS =====
+    
+    def simulate_exam_today(self):
+        """TICKET-406: Simulate exam outcome if exam were today"""
+        print("\n--- Exam Day Simulation ---")
+        courses = self.storage.get_all_courses()
+        
+        if not courses:
+            print("No courses available.")
+            return
+        
+        print("\nAvailable Courses:")
+        for course in courses:
+            print(f"  {course.id}. {course.name}")
+        
+        try:
+            course_id = int(input("\nSelect course ID: "))
+        except ValueError:
+            print("Invalid course ID!")
+            return
+        
+        simulation = self.exam_sim_service.simulate_exam_today(course_id)
+        
+        if 'error' in simulation:
+            print(f"\n✗ Error: {simulation['error']}")
+            return
+        
+        print(f"\n{'='*60}")
+        print(f"  EXAM SIMULATION: {simulation['course_name']}")
+        print(f"{'='*60}")
+        print(f"\n📅 Exam Date: {simulation['exam_date']}")
+        print(f"⏰ Days Remaining: {simulation['days_remaining']}")
+        print(f"\n📊 ESTIMATED SCORE: {simulation['estimated_score']:.1f}%")
+        print(f"🎯 Passing Threshold: {simulation['passing_threshold']:.1f}%")
+        print(f"📈 Pass Probability: {simulation['pass_probability']}%")
+        
+        if simulation['will_pass']:
+            print(f"\n✅ PROJECTION: PASS")
+        else:
+            print(f"\n🚨 PROJECTION: FAIL")
+        
+        print(f"\n⚠️  Risk Level: {simulation['risk_level']}")
+        
+        if simulation['weakest_topics']:
+            print(f"\n🔴 Weakest Topics (Immediate Attention Needed):")
+            for i, topic in enumerate(simulation['weakest_topics'], 1):
+                print(f"  {i}. {topic['name']}: {topic['score']:.1f}% (Weight: {topic['weight']*100:.0f}%, Impact: {topic['impact']:.1f})")
+        
+        if simulation['critical_gaps']:
+            print(f"\n🚨 Critical Gaps (High Weight, Low Score):")
+            for gap in simulation['critical_gaps']:
+                print(f"  • {gap['name']}: {gap['score']:.1f}% (Need {gap['gap']:.1f}% improvement)")
+    
+    def show_reality_dashboard(self):
+        """TICKET-407: Motivation vs Reality Dashboard"""
+        print("\n--- Motivation vs Reality Dashboard ---")
+        courses = self.storage.get_all_courses()
+        
+        if not courses:
+            print("No courses available.")
+            return
+        
+        print("\nAvailable Courses:")
+        for course in courses:
+            print(f"  {course.id}. {course.name}")
+        
+        try:
+            course_id = int(input("\nSelect course ID: "))
+            days = int(input("Analyze last N days (default 30): ") or "30")
+        except ValueError:
+            print("Invalid input!")
+            return
+        
+        dashboard = self.exam_sim_service.get_motivation_vs_reality_dashboard(course_id, days)
+        
+        if 'error' in dashboard:
+            print(f"\n✗ Error: {dashboard['error']}")
+            return
+        
+        print(f"\n{'='*70}")
+        print(f"  REALITY CHECK: {dashboard['course_name']}")
+        print(f"{'='*70}")
+        print(f"\n📊 Analysis Period: Last {dashboard['days_analyzed']} days")
+        print(f"⏱️  Total Time Invested: {dashboard['total_time_hours']:.1f} hours")
+        print(f"📈 Total Skill Gained: {dashboard['total_skill_gain']:.1f}%")
+        print(f"⚡ Average Efficiency: {dashboard['average_efficiency']:.2f} skill points per hour")
+        
+        print(f"\n{dashboard['summary']}")
+        
+        print(f"\n{'─'*70}")
+        print(f"{'Topic':<30} {'Time':<10} {'Gain':<8} {'Quiz':<8} {'Gap':<8} {'Trend':<15}")
+        print(f"{'─'*70}")
+        
+        for topic in dashboard['topics'][:10]:
+            quiz_str = f"{topic['avg_quiz_score']:.0f}%" if topic['avg_quiz_score'] else "N/A"
+            gap_str = f"{topic['reality_gap']:+.0f}%" if topic['reality_gap'] else "N/A"
+            print(f"{topic['topic_name']:<30} {topic['time_spent_hours']:>6.1f}h  {topic['skill_gain']:>6.1f}% {quiz_str:>7} {gap_str:>7} {topic['trend']:<15}")
+            print(f"  → {topic['honest_assessment']}")
+    
+    def detect_fake_productivity_ui(self):
+        """TICKET-401: Fake Productivity Detection UI"""
+        print("\n--- Fake Productivity Detection ---")
+        
+        try:
+            topic_id = int(input("Enter topic ID to analyze: "))
+            days = int(input("Analyze last N days (default 14): ") or "14")
+        except ValueError:
+            print("Invalid input!")
+            return
+        
+        result = self.honesty_service.detect_fake_productivity(topic_id, days)
+        
+        print(f"\n{'='*60}")
+        print(f"  FAKE PRODUCTIVITY ANALYSIS")
+        print(f"{'='*60}")
+        print(f"\n📊 Analysis Period: {result['days_analyzed']} days")
+        print(f"⏱️  Total Study Time: {result['total_study_time']:.0f} minutes")
+        print(f"📈 Net Skill Change: {result['net_skill_change']:+.1f}%")
+        print(f"📝 Quiz Attempts: {result['quiz_attempts']}")
+        print(f"📊 Quiz Improvement: {result['quiz_improvement']:+.1f}%")
+        
+        print(f"\n🎯 Fake Productivity Score: {result['fake_productivity_score']:.0f}/100")
+        
+        if result['suspicious']:
+            print(f"\n🚨 STATUS: SUSPICIOUS - Fake Productivity Detected!")
+            print(f"\n⚠️  Issues Found:")
+            for reason in result['reasons']:
+                print(f"  • {reason}")
+            
+            print(f"\n💡 Recommendations:")
+            print(f"  1. Change your study method - current approach isn't working")
+            print(f"  2. Take a quiz to verify actual understanding")
+            print(f"  3. Focus on active learning instead of passive reading")
+        else:
+            print(f"\n✅ STATUS: Legitimate productivity detected")
+    
+    def check_avoidance_patterns_ui(self):
+        """TICKET-402: Avoidance Pattern Detection UI"""
+        print("\n--- Avoidance Pattern Detection ---")
+        
+        try:
+            topic_id = int(input("Enter topic ID to analyze: "))
+            days = int(input("Analyze last N days (default 21): ") or "21")
+        except ValueError:
+            print("Invalid input!")
+            return
+        
+        result = self.honesty_service.detect_avoidance_patterns(topic_id, days)
+        
+        if 'error' in result:
+            print(f"\n✗ Error: {result['error']}")
+            return
+        
+        print(f"\n{'='*60}")
+        print(f"  AVOIDANCE ANALYSIS: {result['topic_name']}")
+        print(f"{'='*60}")
+        print(f"\n📊 Topic Weight: {result['weight']*100:.0f}% (importance in course)")
+        print(f"📈 Current Skill: {result['skill_level']:.0f}%")
+        print(f"🎯 Skill Gap: {result['skill_gap']:.0f}% (room for improvement)")
+        print(f"⏱️  Study Time: {result['study_time_minutes']:.0f} minutes")
+        print(f"📊 Expected Proportion: {result['expected_proportion']*100:.1f}%")
+        print(f"📊 Actual Proportion: {result['actual_proportion']*100:.1f}%")
+        
+        print(f"\n🎯 Avoidance Severity: {result['avoidance_severity']:.0f}/100")
+        
+        if result['avoided']:
+            print(f"\n🚨 STATUS: AVOIDANCE DETECTED!")
+            print(f"\n⚠️  Patterns Found:")
+            for reason in result['reasons']:
+                print(f"  • {reason}")
+            
+            print(f"\n💡 Action Required:")
+            print(f"  1. This topic needs immediate attention")
+            print(f"  2. Allocate more study time proportional to its weight")
+            print(f"  3. Take a quiz to break the avoidance pattern")
+        else:
+            print(f"\n✅ STATUS: No significant avoidance detected")
+    
+    def detect_overconfidence_ui(self):
+        """TICKET-403: Overconfidence Detection UI"""
+        print("\n--- Overconfidence Detection ---")
+        
+        try:
+            topic_id = int(input("Enter topic ID to analyze: "))
+        except ValueError:
+            print("Invalid input!")
+            return
+        
+        result = self.honesty_service.detect_overconfidence(topic_id)
+        
+        if 'error' in result:
+            print(f"\n✗ Error: {result['error']}")
+            return
+        
+        print(f"\n{'='*60}")
+        print(f"  OVERCONFIDENCE ANALYSIS: {result['topic_name']}")
+        print(f"{'='*60}")
+        print(f"\n📊 Self-Assessed Skill: {result['current_skill']:.0f}%")
+        
+        if result['avg_quiz_score'] is not None:
+            print(f"📝 Average Quiz Score: {result['avg_quiz_score']:.0f}%")
+            gap = result['current_skill'] - result['avg_quiz_score']
+            print(f"⚠️  Reality Gap: {gap:+.0f}%")
+        else:
+            print(f"📝 Quiz Attempts: {result['quiz_count']} (No data)")
+        
+        print(f"\n🎯 Overconfidence Score: {result['overconfidence_score']:.0f}/100")
+        
+        if result['overconfident']:
+            print(f"\n🚨 STATUS: OVERCONFIDENCE DETECTED!")
+            print(f"\n⚠️  Issues Found:")
+            for reason in result['reasons']:
+                print(f"  • {reason}")
+            
+            print(f"\n💡 Reality Check:")
+            print(f"  1. Your self-assessment doesn't match objective performance")
+            print(f"  2. Take quizzes regularly to verify actual understanding")
+            print(f"  3. Be honest about what you don't know")
+        else:
+            print(f"\n✅ STATUS: Realistic self-assessment")
+    
+    def view_all_honesty_warnings(self):
+        """View all honesty warnings for a course"""
+        print("\n--- All Honesty Warnings ---")
+        courses = self.storage.get_all_courses()
+        
+        if not courses:
+            print("No courses available.")
+            return
+        
+        print("\nAvailable Courses:")
+        for course in courses:
+            print(f"  {course.id}. {course.name}")
+        
+        try:
+            course_id = int(input("\nSelect course ID (or 0 for all): "))
+            if course_id == 0:
+                course_id = None
+        except ValueError:
+            print("Invalid input!")
+            return
+        
+        warnings = self.honesty_service.get_honesty_warnings(course_id)
+        
+        if not warnings:
+            print("\n✅ No honesty warnings - all clear!")
+            return
+        
+        print(f"\n{'='*70}")
+        print(f"  HONESTY WARNINGS")
+        print(f"{'='*70}\n")
+        
+        for warning in warnings:
+            print(warning)
+            print()
+    
+    def toggle_brutal_honesty(self):
+        """TICKET-404: Toggle brutal honesty mode"""
+        current = self.honesty_service.toggle_brutal_honesty_mode()
+        
+        if current:
+            print("\n🚨 BRUTAL HONESTY MODE: ACTIVATED")
+            print("All feedback will be direct and unfiltered.")
+            print("Sugar-coating removed. Reality enforced.")
+        else:
+            print("\n✓ Brutal Honesty Mode: Deactivated")
+            print("Feedback will be constructive and polite.")
+    
+    def check_forced_reprioritization_ui(self):
+        """TICKET-405: Check forced re-prioritization status"""
+        print("\n--- Forced Re-Prioritization Check ---")
+        courses = self.storage.get_all_courses()
+        
+        if not courses:
+            print("No courses available.")
+            return
+        
+        print("\nAvailable Courses:")
+        for course in courses:
+            print(f"  {course.id}. {course.name}")
+        
+        try:
+            course_id = int(input("\nSelect course ID: "))
+        except ValueError:
+            print("Invalid input!")
+            return
+        
+        check = self.reprioritization.check_forced_reprioritization(course_id)
+        
+        if 'error' in check:
+            print(f"\n✗ Error: {check['error']}")
+            return
+        
+        print(f"\n{'='*70}")
+        print(f"  FORCED RE-PRIORITIZATION STATUS")
+        print(f"{'='*70}")
+        print(f"\n⏰ Days Until Exam: {check['days_until_exam']}")
+        print(f"⚠️  Risk Level: {check['risk_level']}")
+        print(f"🔒 Forced Override: {'YES' if check['forced_reprioritization'] else 'NO'}")
+        print(f"🎛️  Can Ignore: {'YES' if check['can_ignore'] else 'NO'}")
+        
+        if check['forced_reprioritization']:
+            print(f"\n{check['explanation']}")
+            
+            # Show active consequences
+            consequences = self.consequence_engine.get_active_consequences(course_id)
+            if consequences:
+                print(f"\n{'='*70}")
+                print(f"  ACTIVE CONSEQUENCES")
+                print(f"{'='*70}\n")
+                for consequence in consequences:
+                    print(consequence)
+        else:
+            print(f"\n✅ No forced re-prioritization needed.")
+            print(f"You have full control over your study plan.")
+    
     def run(self):
         print("\n🎓 Welcome to the Skill-Aware Study Planner!")
         
         while True:
             self.display_menu()
-            choice = input("Select an option (1-25): ").strip()
+            choice = input("Select an option (1-33): ").strip()
             
             if choice == '1':
                 self.add_course()
@@ -1059,6 +1392,22 @@ class CLI:
             elif choice == '25':
                 print("\n👋 Goodbye! Happy studying!")
                 sys.exit(0)
+            elif choice == '26':
+                self.simulate_exam_today()
+            elif choice == '27':
+                self.show_reality_dashboard()
+            elif choice == '28':
+                self.detect_fake_productivity_ui()
+            elif choice == '29':
+                self.check_avoidance_patterns_ui()
+            elif choice == '30':
+                self.detect_overconfidence_ui()
+            elif choice == '31':
+                self.view_all_honesty_warnings()
+            elif choice == '32':
+                self.toggle_brutal_honesty()
+            elif choice == '33':
+                self.check_forced_reprioritization_ui()
             else:
                 print("\n✗ Invalid option. Please try again.")
 

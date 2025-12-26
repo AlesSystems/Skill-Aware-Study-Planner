@@ -23,7 +23,7 @@ An intelligent, adaptive study planning system that learns from your performance
 - ✅ **Adaptive Priority Recalculation**: Dynamic planning based on learning trends
 - ✅ **Progress Visualization**: Charts for skill progress and study time
 
-### Phase 3 - Intelligence & Decision Layer (NEW!)
+### Phase 3 - Intelligence & Decision Layer
 - ✅ **Topic Dependency Graph**: Model prerequisite relationships between topics
 - ✅ **Dependency-Aware Priority Adjustment**: Automatic boosting of prerequisites
 - ✅ **Time Constraint Optimization**: Intelligent time allocation under constraints
@@ -33,6 +33,16 @@ An intelligent, adaptive study planning system that learns from your performance
 - ✅ **Study Strategy Comparison**: Compare balanced, high-weight, and weak-focus strategies
 - ✅ **Drop-or-Skip Topic Advisor**: Recommendations on which topics to skip when time-limited
 - ✅ **Decision Trace & Explainability**: Full transparency on why the planner makes recommendations
+
+### Phase 4 - Honesty & Reality Check System (NEW!)
+- ✅ **Fake Productivity Detection**: Identifies study time that doesn't translate to skill improvement
+- ✅ **Avoidance Pattern Detection**: Catches consistent avoidance of difficult/important topics
+- ✅ **Overconfidence Detection**: Detects mismatch between self-assessment and quiz performance
+- ✅ **Brutal Honesty Mode**: Optional unfiltered feedback for maximum accountability
+- ✅ **Forced Re-Prioritization**: Automatic override when risk is too high (exam imminent, critical gaps)
+- ✅ **Exam-Day Simulation**: Predict current exam score with pass/fail probability
+- ✅ **Motivation vs Reality Dashboard**: Compare time invested vs actual progress
+- ✅ **Hard Warnings & Lockouts**: Consequences for continued avoidance (topic locks, mandatory quizzes)
 
 ## Installation
 
@@ -97,6 +107,16 @@ python main.py
 22. Get Skip Topic Suggestions
 23. View Decision Log
 
+--- Honesty & Reality Check (Phase 4) ---
+26. Simulate Exam Today
+27. Motivation vs Reality Dashboard
+28. Detect Fake Productivity
+29. Check Avoidance Patterns
+30. Detect Overconfidence
+31. View All Honesty Warnings
+32. Toggle Brutal Honesty Mode
+33. Check Forced Re-Prioritization
+
 --- System ---
 24. Apply Skill Decay
 25. Exit
@@ -150,12 +170,18 @@ study-planner/
 │   │   ├── quiz_service.py
 │   │   ├── skill_tracking_service.py
 │   │   ├── study_session_service.py
-│   │   └── progress_service.py
+│   │   ├── progress_service.py
+│   │   ├── honesty_service.py              # Phase 4: Honesty detection
+│   │   ├── exam_simulation_service.py      # Phase 4: Exam simulation
+│   │   └── reprioritization_service.py     # Phase 4: Forced overrides
 │   ├── planner/          # Priority & planning algorithms
 │   └── storage/          # Database layer (SQLAlchemy)
 ├── docs/                 # Documentation
-│   └── PHASE2_DOCUMENTATION.md
+│   ├── PHASE2_DOCUMENTATION.md
+│   └── phase4_documentation.md
 ├── tests/                # Unit tests
+│   ├── test_app.py
+│   └── test_phase4.py
 ├── main.py               # CLI Entry point
 └── requirements.txt
 ```
@@ -209,9 +235,20 @@ study-planner/
 - Drop-or-skip topic advisor
 - Decision trace and explainability
 
+### Phase 4 (Honesty & Reality Check System) - ✅ Complete
+- Fake productivity detection (high time, no improvement)
+- Avoidance pattern detection (ignoring critical topics)
+- Overconfidence detection (self-assessment vs quiz mismatch)
+- Brutal honesty mode (unfiltered feedback)
+- Forced re-prioritization engine (override on high risk)
+- Exam-day simulation (predict current score)
+- Motivation vs reality dashboard (effort vs progress)
+- Hard warnings and lockouts (consequences for avoidance)
+
 ## Documentation
 
 - **Phase 2 Features**: See [docs/PHASE2_DOCUMENTATION.md](docs/PHASE2_DOCUMENTATION.md)
+- **Phase 4 Honesty System**: See [docs/phase4_documentation.md](docs/phase4_documentation.md)
 - **Converting to React GUI**: See React conversion guide in Phase 2 docs
 
 ## Converting to React GUI
@@ -227,8 +264,8 @@ See [docs/PHASE2_DOCUMENTATION.md](docs/PHASE2_DOCUMENTATION.md) for detailed co
 
 ## Future Enhancements
 
-### Potential Phase 4+
-- Machine learning for personalized decay rates
+### Potential Phase 5+
+- Machine learning for personalized decay rates and study patterns
 - Spaced repetition system (SRS) integration
 - Multi-exam scheduling optimization
 - Study group collaboration features
@@ -236,6 +273,8 @@ See [docs/PHASE2_DOCUMENTATION.md](docs/PHASE2_DOCUMENTATION.md) for detailed co
 - Cloud sync and multi-device support
 - PDF/document ingestion for automated topic extraction
 - Integration with calendar apps
+- AI-powered quiz generation from course materials
+- Voice-controlled study sessions
 
 ## License
 

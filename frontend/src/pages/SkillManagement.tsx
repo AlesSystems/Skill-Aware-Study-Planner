@@ -160,6 +160,7 @@ const SkillManagement = () => {
                     value={newSkill}
                     onChange={(e) => setNewSkill(e.target.value)}
                     className="w-full px-4 py-2 bg-gray-700 text-white rounded-lg"
+                    placeholder="Enter skill level"
                     required
                   />
                 </div>

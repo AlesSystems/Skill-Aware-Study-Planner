@@ -32,9 +32,14 @@ const DecisionLogs = () => {
       } else {
         response = await api.get(`/decision-logs/type/${filterType}?limit=${limit}`);
       }
-      setLogs(response.data);
-    } catch (error) {
+      setLogs(response.data || []);
+    } catch (error: any) {
       console.error('Failed to load decision logs', error);
+      // Set empty array on error
+      setLogs([]);
+      if (error.response?.status !== 400) {
+        alert('Error loading decision logs. The feature may not be available yet.');
+      }
     } finally {
       setLoading(false);
     }

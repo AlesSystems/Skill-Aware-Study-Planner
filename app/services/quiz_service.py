@@ -193,3 +193,21 @@ class QuizService:
             }
         finally:
             session.close()
+    
+    def delete_quiz(self, quiz_id: int):
+        """Delete a quiz and all its questions and attempts"""
+        from app.storage.database import QuizQuestionDB, QuizAttemptDB
+        session = self.db.get_session()
+        try:
+            # Delete attempts first
+            session.query(QuizAttemptDB).filter(QuizAttemptDB.quiz_id == quiz_id).delete()
+            
+            # Delete questions
+            session.query(QuizQuestionDB).filter(QuizQuestionDB.quiz_id == quiz_id).delete()
+            
+            # Delete quiz
+            session.query(QuizDB).filter(QuizDB.id == quiz_id).delete()
+            
+            session.commit()
+        finally:
+            session.close()

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Plus, BookOpen, CheckCircle, XCircle, Clock } from 'lucide-react';
-import { getCourses, getTopics, getTopicQuizzes, createQuiz, attemptQuiz, getQuizAttempts, type Course, type Topic, type Quiz, type QuizQuestion, type QuizAttempt } from '../services/api';
+import { Plus, BookOpen, CheckCircle, XCircle, Clock, Trash2 } from 'lucide-react';
+import { getCourses, getTopics, getTopicQuizzes, createQuiz, attemptQuiz, getQuizAttempts, deleteQuiz, type Course, type Topic, type Quiz, type QuizQuestion, type QuizAttempt } from '../services/api';
 
 const Quizzes = () => {
   const [courses, setCourses] = useState<Course[]>([]);
@@ -143,6 +143,24 @@ const Quizzes = () => {
     }
   };
 
+  const handleDeleteQuiz = async (e: React.MouseEvent, quizId: number, quizTitle: string) => {
+    e.stopPropagation();
+    
+    if (!confirm(`Delete quiz "${quizTitle}"? This will also delete all attempts.`)) {
+      return;
+    }
+
+    try {
+      await deleteQuiz(quizId);
+      if (selectedTopic) {
+        loadQuizzes(selectedTopic);
+      }
+    } catch (error) {
+      console.error('Failed to delete quiz', error);
+      alert('Error deleting quiz');
+    }
+  };
+
   if (loading) return <div className="text-white p-6">Loading...</div>;
 
   return (
@@ -219,6 +237,13 @@ const Quizzes = () => {
                       className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
                     >
                       View Attempts
+                    </button>
+                    <button
+                      onClick={(e) => handleDeleteQuiz(e, quiz.id!, quiz.title)}
+                      className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 flex items-center gap-2"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                      Delete
                     </button>
                   </div>
                 </div>

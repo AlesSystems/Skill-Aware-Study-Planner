@@ -7,6 +7,10 @@ import DailyPlan from './pages/DailyPlan';
 import Progress from './pages/Progress';
 import Quizzes from './pages/Quizzes';
 import StudySessions from './pages/StudySessions';
+import SkillManagement from './pages/SkillManagement';
+import Dependencies from './pages/Dependencies';
+import Scenarios from './pages/Scenarios';
+import DecisionLogs from './pages/DecisionLogs';
 
 function App() {
   return (
@@ -20,6 +24,10 @@ function App() {
           <Route path="progress" element={<Progress />} />
           <Route path="quizzes" element={<Quizzes />} />
           <Route path="sessions" element={<StudySessions />} />
+          <Route path="skills" element={<SkillManagement />} />
+          <Route path="dependencies" element={<Dependencies />} />
+          <Route path="scenarios" element={<Scenarios />} />
+          <Route path="decisions" element={<DecisionLogs />} />
         </Route>
       </Routes>
     </Router>

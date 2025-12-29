@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Plus, Calendar, Book } from 'lucide-react';
-import { getCourses, createCourse, type Course } from '../services/api';
+import { Plus, Calendar, Book, Trash2 } from 'lucide-react';
+import { getCourses, createCourse, deleteCourse, type Course } from '../services/api';
 import { Link } from 'react-router-dom';
 
 const Courses = () => {
@@ -42,6 +42,23 @@ const Courses = () => {
     } catch (error) {
       console.error('Failed to create course', error);
       alert('Error creating course. Ensure exam date is in the future.');
+    }
+  };
+
+  const handleDelete = async (e: React.MouseEvent, courseId: number, courseName: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (!confirm(`Delete course "${courseName}"? This will also delete all associated topics and data.`)) {
+      return;
+    }
+
+    try {
+      await deleteCourse(courseId);
+      loadCourses();
+    } catch (error) {
+      console.error('Failed to delete course', error);
+      alert('Error deleting course');
     }
   };
 
@@ -102,23 +119,31 @@ const Courses = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {courses.map(course => (
-          <Link 
-            to={`/courses/${course.id}`} 
-            key={course.id}
-            className="block bg-gray-800 p-6 rounded-lg border border-gray-700 hover:border-blue-500 transition-colors"
-          >
-            <div className="flex items-start justify-between mb-4">
-              <div className="p-2 bg-blue-500/10 rounded-lg">
-                <Book className="text-blue-400" size={24} />
+          <div key={course.id} className="relative group">
+            <Link 
+              to={`/courses/${course.id}`} 
+              className="block bg-gray-800 p-6 rounded-lg border border-gray-700 hover:border-blue-500 transition-colors"
+            >
+              <div className="flex items-start justify-between mb-4">
+                <div className="p-2 bg-blue-500/10 rounded-lg">
+                  <Book className="text-blue-400" size={24} />
+                </div>
+                <span className="text-xs font-mono text-gray-500">ID: {course.id}</span>
               </div>
-              <span className="text-xs font-mono text-gray-500">ID: {course.id}</span>
-            </div>
-            <h3 className="text-xl font-bold text-white mb-2">{course.name}</h3>
-            <div className="flex items-center text-gray-400 text-sm">
-              <Calendar size={16} className="mr-2" />
-              {new Date(course.exam_date).toLocaleDateString()}
-            </div>
-          </Link>
+              <h3 className="text-xl font-bold text-white mb-2">{course.name}</h3>
+              <div className="flex items-center text-gray-400 text-sm">
+                <Calendar size={16} className="mr-2" />
+                {new Date(course.exam_date).toLocaleDateString()}
+              </div>
+            </Link>
+            <button
+              onClick={(e) => handleDelete(e, course.id, course.name)}
+              className="absolute top-2 right-2 p-2 bg-red-600 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-700"
+              title="Delete course"
+            >
+              <Trash2 size={16} />
+            </button>
+          </div>
         ))}
       </div>
       

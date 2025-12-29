@@ -199,6 +199,10 @@ export const getTopicQuizResults = async (topicId: number) => {
   return response.data;
 };
 
+export const deleteQuiz = async (quizId: number) => {
+  await api.delete(`/quizzes/${quizId}`);
+};
+
 // Study Session APIs
 export const startStudySession = async (topicId: number) => {
   const response = await api.post<StudySession>('/study-sessions/start', { topic_id: topicId });

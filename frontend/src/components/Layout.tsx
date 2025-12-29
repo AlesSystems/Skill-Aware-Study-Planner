@@ -1,5 +1,5 @@
 import { Outlet, Link } from 'react-router-dom';
-import { BookOpen, BarChart2, CheckSquare, Settings, Home, Clock, FileQuestion } from 'lucide-react';
+import { BookOpen, BarChart2, CheckSquare, Settings, Home, Clock, FileQuestion, Brain, GitBranch, Sparkles, BookOpenCheck } from 'lucide-react';
 
 const Layout = () => {
   return (
@@ -24,6 +24,7 @@ const Layout = () => {
             <CheckSquare size={20} />
             <span>Daily Plan</span>
           </Link>
+          
           <Link to="/quizzes" className="flex items-center space-x-3 p-2 rounded hover:bg-gray-700 transition-colors">
             <FileQuestion size={20} />
             <span>Quizzes</span>
@@ -32,10 +33,29 @@ const Layout = () => {
             <Clock size={20} />
             <span>Study Sessions</span>
           </Link>
+          <Link to="/skills" className="flex items-center space-x-3 p-2 rounded hover:bg-gray-700 transition-colors">
+            <Brain size={20} />
+            <span>Skill Management</span>
+          </Link>
+
+          <Link to="/dependencies" className="flex items-center space-x-3 p-2 rounded hover:bg-gray-700 transition-colors">
+            <GitBranch size={20} />
+            <span>Dependencies</span>
+          </Link>
+          <Link to="/scenarios" className="flex items-center space-x-3 p-2 rounded hover:bg-gray-700 transition-colors">
+            <Sparkles size={20} />
+            <span>Scenarios</span>
+          </Link>
+          <Link to="/decisions" className="flex items-center space-x-3 p-2 rounded hover:bg-gray-700 transition-colors">
+            <BookOpenCheck size={20} />
+            <span>Decision Logs</span>
+          </Link>
+
           <Link to="/progress" className="flex items-center space-x-3 p-2 rounded hover:bg-gray-700 transition-colors">
             <BarChart2 size={20} />
             <span>Progress</span>
           </Link>
+          
           <div className="pt-4 border-t border-gray-700">
              <Link to="/settings" className="flex items-center space-x-3 p-2 rounded hover:bg-gray-700 text-gray-400 transition-colors">
               <Settings size={20} />

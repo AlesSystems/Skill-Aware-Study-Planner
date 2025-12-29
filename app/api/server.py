@@ -273,6 +273,18 @@ def get_topic_quiz_results(topic_id: int):
     results = quiz_service.get_topic_quiz_summary(topic_id)
     return results
 
+@app.delete("/quizzes/{quiz_id}")
+def delete_quiz(quiz_id: int):
+    try:
+        quiz = quiz_service.get_quiz(quiz_id)
+        if not quiz:
+            raise HTTPException(status_code=404, detail="Quiz not found")
+        
+        quiz_service.delete_quiz(quiz_id)
+        return {"message": "Quiz deleted successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
 # === Study Session Endpoints ===
 
 @app.post("/study-sessions/start", response_model=StudySession)
@@ -366,6 +378,175 @@ def get_decay_status():
     try:
         status = skill_tracking.get_decay_eligible_topics()
         return status
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+# === Phase 3: Dependencies Endpoints ===
+
+class DependencyCreateRequest(BaseModel):
+    prerequisite_topic_id: int
+    dependent_topic_id: int
+    min_skill_threshold: float = 70.0
+
+@app.post("/dependencies")
+def create_dependency(request: DependencyCreateRequest):
+    try:
+        dependency = planner.dependency_service.add_dependency(
+            request.prerequisite_topic_id,
+            request.dependent_topic_id,
+            request.min_skill_threshold
+        )
+        return {
+            "id": dependency.id,
+            "prerequisite_topic_id": dependency.prerequisite_topic_id,
+            "dependent_topic_id": dependency.dependent_topic_id,
+            "min_skill_threshold": dependency.min_skill_threshold
+        }
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.get("/dependencies")
+def get_all_dependencies():
+    try:
+        graph = planner.dependency_service.get_dependency_graph()
+        return graph
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.get("/topics/{topic_id}/prerequisites")
+def get_topic_prerequisites(topic_id: int):
+    try:
+        topic = storage.get_topic(topic_id)
+        if not topic:
+            raise HTTPException(status_code=404, detail="Topic not found")
+        
+        prereqs = planner.dependency_service.get_prerequisites(topic_id)
+        return prereqs
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.get("/topics/{topic_id}/dependents")
+def get_topic_dependents(topic_id: int):
+    try:
+        topic = storage.get_topic(topic_id)
+        if not topic:
+            raise HTTPException(status_code=404, detail="Topic not found")
+        
+        dependents = planner.dependency_service.get_dependents(topic_id)
+        return dependents
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.delete("/dependencies/{dependency_id}")
+def delete_dependency(dependency_id: int):
+    try:
+        planner.dependency_service.remove_dependency(dependency_id)
+        return {"message": "Dependency removed successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.get("/topics/{topic_id}/learning-path")
+def get_learning_path(topic_id: int):
+    try:
+        topic = storage.get_topic(topic_id)
+        if not topic:
+            raise HTTPException(status_code=404, detail="Topic not found")
+        
+        path = planner.dependency_service.get_learning_path(topic_id)
+        path_details = []
+        for tid in path:
+            t = storage.get_topic(tid)
+            path_details.append({
+                "id": t.id,
+                "name": t.name,
+                "skill_level": t.skill_level,
+                "weight": t.weight
+            })
+        return path_details
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+# === Phase 3: Scenarios Endpoints ===
+
+class ScenarioRequest(BaseModel):
+    scenario_type: str
+    params: Dict[str, Any]
+
+@app.post("/scenarios/simulate")
+def simulate_scenario(request: ScenarioRequest):
+    try:
+        result = planner.simulate_scenario(request.scenario_type, **request.params)
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.post("/scenarios/compare-strategies")
+def compare_strategies(available_hours: float = Body(..., embed=True)):
+    try:
+        result = planner.simulate_scenario('compare_strategies', available_hours=available_hours)
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.get("/scenarios/skip-suggestions")
+def get_skip_suggestions(available_hours: float):
+    try:
+        suggestions = planner.suggest_skip_topics(available_hours)
+        return suggestions
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+# === Phase 3: Decision Logs Endpoints ===
+
+@app.get("/decision-logs")
+def get_decision_logs(limit: int = 20):
+    try:
+        logs = planner.decision_service.get_recent_decisions(limit=limit)
+        return logs
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.get("/decision-logs/{log_id}")
+def get_decision_log(log_id: int):
+    try:
+        session = storage.db.get_session()
+        from app.storage.database import DecisionLogDB
+        import json
+        
+        log = session.query(DecisionLogDB).filter(DecisionLogDB.id == log_id).first()
+        session.close()
+        
+        if not log:
+            raise HTTPException(status_code=404, detail="Decision log not found")
+        
+        return {
+            "id": log.id,
+            "timestamp": log.timestamp,
+            "decision_type": log.decision_type,
+            "topic_id": log.topic_id,
+            "explanation": log.explanation,
+            "metadata": json.loads(log.metadata) if log.metadata else None
+        }
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.get("/decision-logs/type/{decision_type}")
+def get_decision_logs_by_type(decision_type: str, limit: int = 10):
+    try:
+        logs = planner.decision_service.get_decisions_by_type(decision_type, limit=limit)
+        return logs
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.get("/topics/{topic_id}/decisions")
+def get_topic_decisions(topic_id: int, limit: int = 10):
+    try:
+        topic = storage.get_topic(topic_id)
+        if not topic:
+            raise HTTPException(status_code=404, detail="Topic not found")
+        
+        decisions = planner.decision_service.get_decisions_for_topic(topic_id, limit=limit)
+        return decisions
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 

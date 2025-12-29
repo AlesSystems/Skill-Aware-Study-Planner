@@ -152,3 +152,66 @@ class StudySessionService:
             return totals
         finally:
             session.close()
+    
+    def get_all_sessions(self, limit: int = 50) -> List[StudySession]:
+        """Get all completed study sessions"""
+        session = self.db.get_session()
+        try:
+            db_sessions = session.query(StudySessionDB).filter(
+                StudySessionDB.end_time.isnot(None)
+            ).order_by(StudySessionDB.start_time.desc()).limit(limit).all()
+            
+            return [
+                StudySession(
+                    id=s.id,
+                    topic_id=s.topic_id,
+                    start_time=s.start_time,
+                    end_time=s.end_time,
+                    duration_minutes=s.duration_minutes
+                ) for s in db_sessions
+            ]
+        finally:
+            session.close()
+    
+    def get_sessions_by_topic(self, topic_id: int) -> List[StudySession]:
+        """Alias for get_topic_sessions"""
+        return self.get_topic_sessions(topic_id)
+    
+    def get_statistics(self) -> Dict:
+        """Get overall study statistics"""
+        session = self.db.get_session()
+        try:
+            # Total sessions
+            total_sessions = session.query(StudySessionDB).filter(
+                StudySessionDB.end_time.isnot(None)
+            ).count()
+            
+            # Total study time
+            db_sessions = session.query(StudySessionDB).filter(
+                StudySessionDB.end_time.isnot(None)
+            ).all()
+            
+            total_minutes = sum(s.duration_minutes for s in db_sessions if s.duration_minutes)
+            
+            # Last 7 days
+            seven_days_ago = datetime.now() - timedelta(days=7)
+            recent_sessions = session.query(StudySessionDB).filter(
+                StudySessionDB.end_time.isnot(None),
+                StudySessionDB.start_time >= seven_days_ago
+            ).all()
+            
+            last_7_days_minutes = sum(s.duration_minutes for s in recent_sessions if s.duration_minutes)
+            
+            # Average session duration
+            avg_duration = total_minutes / total_sessions if total_sessions > 0 else 0
+            
+            return {
+                "total_sessions": total_sessions,
+                "total_hours": total_minutes / 60,
+                "last_7_days_hours": last_7_days_minutes / 60,
+                "average_session_minutes": avg_duration,
+                "daily_breakdown": self.get_daily_time_breakdown(7),
+                "topic_totals": self.get_total_time_per_topic()
+            }
+        finally:
+            session.close()

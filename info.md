@@ -1,262 +1,663 @@
-# Phase 5 — Frontend UI & User Experience
-
-Goal: Build a clear, honest, and decision-focused user interface that exposes the planner’s intelligence and guides daily action.
-
----
-
-## TICKET-501: Frontend Tech Stack Setup
-
-**Type:** Task  
-**Priority:** High  
-
-### Description
-Initialize the frontend project and connect it to the backend API.
-
-### Recommended Stack
-- Framework: React
-- Language: TypeScript
-- Styling: Tailwind CSS
-- Charts: Chart.js or Recharts
-
-### Acceptance Criteria
-- Frontend project initialized
-- Backend API reachable
-- Basic routing configured
-
----
-
-## TICKET-502: Global App Layout
-
-**Type:** Feature  
-**Priority:** High  
-
-### Description
-Create the main application layout.
-
-### Layout Sections
-- Top bar (exam countdown, honesty status)
-- Sidebar navigation
-- Main content area
-
-### Acceptance Criteria
-- Consistent layout across pages
-- Responsive design (desktop-first)
-- Clean, distraction-free UI
-
----
-
-## TICKET-503: Course & Topic Management UI
-
-**Type:** Feature  
-**Priority:** High  
-
-### Description
-UI to create, edit, and manage courses and topics.
-
-### Features
-- Add/edit courses
-- Add/edit topics
-- Set weights and exam dates
-- Visual weight validation (sum = 100%)
-
-### Acceptance Criteria
-- CRUD operations fully functional
-- Validation errors shown clearly
-- Changes persist correctly
-
----
-
-## TICKET-504: Daily Study Plan View
-
-**Type:** Feature  
-**Priority:** Critical  
-
-### Description
-Primary daily usage screen showing what to study today.
-
-### Display
-- Ordered topic list
-- Time allocation per topic
-- Priority indicators
-- Dependency warnings
-
-### Acceptance Criteria
-- Clear action-oriented design
-- High-priority items visually emphasized
-- Explanations accessible per item
-
----
-
-## TICKET-505: Skill Progress Visualization
-
-**Type:** Feature  
-**Priority:** High  
-
-### Description
-Visualize skill evolution over time.
-
-### Charts
-- Skill history per topic
-- Weakest topics overview
-- Skill decay indicators
-
-### Acceptance Criteria
-- Charts accurate and readable
-- Hover explanations available
-- No visual clutter
-
----
-
-## TICKET-506: Exam Readiness Dashboard
-
-**Type:** Feature  
-**Priority:** Critical  
-
-### Description
-High-level overview of exam preparedness.
-
-### Metrics
-- Expected exam score range
-- Pass/fail probability
-- Risk indicators
-- Blocking prerequisites
-
-### Acceptance Criteria
-- One-screen overview
-- Risks clearly highlighted
-- Updates dynamically
-
----
-
-## TICKET-507: Explainability UI (“Why This?”)
-
-**Type:** Feature  
-**Priority:** High  
-
-### Description
-Expose planner reasoning to the user.
-
-### Features
-- “Why is this recommended?” button
-- Priority breakdown (weight, skill, urgency)
-- Dependency explanations
-
-### Acceptance Criteria
-- Decisions are transparent
-- Explanations match backend logic
-- No black-box behavior
-
----
-
-## TICKET-508: Honesty & Reality Feedback UI
-
-**Type:** Feature  
-**Priority:** High  
-
-### Description
-Surface honesty-related signals without being noisy.
-
-### Elements
-- Fake productivity warnings
-- Avoidance alerts
-- Overconfidence flags
-
-### Acceptance Criteria
-- Warnings are visible but not spammy
-- Severity clearly communicated
-- User understands consequences
-
----
-
-## TICKET-509: Brutal Honesty Mode Toggle UI
-
-**Type:** Feature  
-**Priority:** Medium  
-
-### Description
-UI to enable/disable Brutal Honesty Mode.
-
-### Features
-- Warning modal before enabling
-- Visual mode indicator
-- Immediate behavior change
-
-### Acceptance Criteria
-- Mode status always visible
-- Toggle persists
-- UX reflects mode severity
-
----
-
-## TICKET-510: What-If Simulation UI
-
-**Type:** Feature  
-**Priority:** Medium  
-
-### Description
-UI to run and compare what-if study scenarios.
-
-### Inputs
-- Daily hours
-- Strategy selection
-- Exam date changes
-
-### Outputs
-- Projected scores
-- Skill changes
-- Risk comparison
-
-### Acceptance Criteria
-- Simulations clearly separated from real data
-- Results easy to compare
-- No accidental data overwrite
-
----
-
-## TICKET-511: UX Polish & Accessibility
-
-**Type:** Task  
-**Priority:** Medium  
-
-### Description
-Improve usability and accessibility.
-
-### Tasks
-- Keyboard navigation
-- Color contrast validation
-- Loading states
-- Error states
-
-### Acceptance Criteria
-- App usable without mouse
-- Clear feedback on all actions
-- No silent failures
-
----
-
-## TICKET-512: Phase 5 Documentation
-
-**Type:** Task  
-**Priority:** Medium  
-
-### Description
-Document frontend architecture and UX principles.
-
-### Content
-- Component structure
-- State management approach
-- UX philosophy (clarity > motivation)
-
-### Acceptance Criteria
-- README updated
-- Frontend onboarding instructions
-- Phase 5 scope documented
-
----
-
-## Phase 5 Definition of Done
-
-- User can fully operate the planner via UI
-- Core decisions are visible and explained
-- Risks and honesty signals are clear
-- UI supports daily real-world use
+ailed to load courses AxiosError {message: 'Request failed with status code 500', name: 'AxiosError', code: 'ERR_BAD_RESPONSE', config: {…}, request: XMLHttpRequest, …}
+loadCourses @ Courses.tsx:24
+await in loadCourses
+(anonymous) @ Courses.tsx:16
+react_stack_bottom_frame @ react-dom_client.js?v=c7bb928f:18567
+runWithFiberInDEV @ react-dom_client.js?v=c7bb928f:997
+commitHookEffectListMount @ react-dom_client.js?v=c7bb928f:9411
+commitHookPassiveMountEffects @ react-dom_client.js?v=c7bb928f:9465
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11040
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11066
+flushPassiveEffects @ react-dom_client.js?v=c7bb928f:13150
+(anonymous) @ react-dom_client.js?v=c7bb928f:12776
+performWorkUntilDeadline @ react-dom_client.js?v=c7bb928f:36Understand this error
+api.ts:103  GET http://localhost:5173/api/courses 500 (Internal Server Error)
+dispatchXhrRequest @ axios.js?v=c7bb928f:1696
+xhr @ axios.js?v=c7bb928f:1573
+dispatchRequest @ axios.js?v=c7bb928f:2107
+_request @ axios.js?v=c7bb928f:2327
+request @ axios.js?v=c7bb928f:2219
+Axios.<computed> @ axios.js?v=c7bb928f:2346
+wrap @ axios.js?v=c7bb928f:8
+getCourses @ api.ts:103
+loadCourses @ Courses.tsx:21
+(anonymous) @ Courses.tsx:16
+react_stack_bottom_frame @ react-dom_client.js?v=c7bb928f:18567
+runWithFiberInDEV @ react-dom_client.js?v=c7bb928f:997
+commitHookEffectListMount @ react-dom_client.js?v=c7bb928f:9411
+commitHookPassiveMountEffects @ react-dom_client.js?v=c7bb928f:9465
+reconnectPassiveEffects @ react-dom_client.js?v=c7bb928f:11273
+doubleInvokeEffectsOnFiber @ react-dom_client.js?v=c7bb928f:13339
+runWithFiberInDEV @ react-dom_client.js?v=c7bb928f:997
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13312
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+commitDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13347
+flushPassiveEffects @ react-dom_client.js?v=c7bb928f:13157
+(anonymous) @ react-dom_client.js?v=c7bb928f:12776
+performWorkUntilDeadline @ react-dom_client.js?v=c7bb928f:36Understand this error
+Courses.tsx:24 Failed to load courses AxiosError {message: 'Request failed with status code 500', name: 'AxiosError', code: 'ERR_BAD_RESPONSE', config: {…}, request: XMLHttpRequest, …}
+loadCourses @ Courses.tsx:24
+await in loadCourses
+(anonymous) @ Courses.tsx:16
+react_stack_bottom_frame @ react-dom_client.js?v=c7bb928f:18567
+runWithFiberInDEV @ react-dom_client.js?v=c7bb928f:997
+commitHookEffectListMount @ react-dom_client.js?v=c7bb928f:9411
+commitHookPassiveMountEffects @ react-dom_client.js?v=c7bb928f:9465
+reconnectPassiveEffects @ react-dom_client.js?v=c7bb928f:11273
+doubleInvokeEffectsOnFiber @ react-dom_client.js?v=c7bb928f:13339
+runWithFiberInDEV @ react-dom_client.js?v=c7bb928f:997
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13312
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+commitDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13347
+flushPassiveEffects @ react-dom_client.js?v=c7bb928f:13157
+(anonymous) @ react-dom_client.js?v=c7bb928f:12776
+performWorkUntilDeadline @ react-dom_client.js?v=c7bb928f:36Understand this error
+api.ts:138  GET http://localhost:5173/api/analytics/expected-scores 500 (Internal Server Error)
+dispatchXhrRequest @ axios.js?v=c7bb928f:1696
+xhr @ axios.js?v=c7bb928f:1573
+dispatchRequest @ axios.js?v=c7bb928f:2107
+_request @ axios.js?v=c7bb928f:2327
+request @ axios.js?v=c7bb928f:2219
+Axios.<computed> @ axios.js?v=c7bb928f:2346
+wrap @ axios.js?v=c7bb928f:8
+getExpectedScores @ api.ts:138
+loadData @ Dashboard.tsx:18
+(anonymous) @ Dashboard.tsx:12
+react_stack_bottom_frame @ react-dom_client.js?v=c7bb928f:18567
+runWithFiberInDEV @ react-dom_client.js?v=c7bb928f:997
+commitHookEffectListMount @ react-dom_client.js?v=c7bb928f:9411
+commitHookPassiveMountEffects @ react-dom_client.js?v=c7bb928f:9465
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11040
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11066
+flushPassiveEffects @ react-dom_client.js?v=c7bb928f:13150
+(anonymous) @ react-dom_client.js?v=c7bb928f:12776
+performWorkUntilDeadline @ react-dom_client.js?v=c7bb928f:36Understand this error
+Dashboard.tsx:24 Failed to load dashboard data AxiosError {message: 'Request failed with status code 500', name: 'AxiosError', code: 'ERR_BAD_RESPONSE', config: {…}, request: XMLHttpRequest, …}
+loadData @ Dashboard.tsx:24
+await in loadData
+(anonymous) @ Dashboard.tsx:12
+react_stack_bottom_frame @ react-dom_client.js?v=c7bb928f:18567
+runWithFiberInDEV @ react-dom_client.js?v=c7bb928f:997
+commitHookEffectListMount @ react-dom_client.js?v=c7bb928f:9411
+commitHookPassiveMountEffects @ react-dom_client.js?v=c7bb928f:9465
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11040
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11066
+flushPassiveEffects @ react-dom_client.js?v=c7bb928f:13150
+(anonymous) @ react-dom_client.js?v=c7bb928f:12776
+performWorkUntilDeadline @ react-dom_client.js?v=c7bb928f:36Understand this error
+api.ts:143  GET http://localhost:5173/api/analytics/risks 500 (Internal Server Error)
+dispatchXhrRequest @ axios.js?v=c7bb928f:1696
+xhr @ axios.js?v=c7bb928f:1573
+dispatchRequest @ axios.js?v=c7bb928f:2107
+_request @ axios.js?v=c7bb928f:2327
+request @ axios.js?v=c7bb928f:2219
+Axios.<computed> @ axios.js?v=c7bb928f:2346
+wrap @ axios.js?v=c7bb928f:8
+getRisks @ api.ts:143
+loadData @ Dashboard.tsx:19
+(anonymous) @ Dashboard.tsx:12
+react_stack_bottom_frame @ react-dom_client.js?v=c7bb928f:18567
+runWithFiberInDEV @ react-dom_client.js?v=c7bb928f:997
+commitHookEffectListMount @ react-dom_client.js?v=c7bb928f:9411
+commitHookPassiveMountEffects @ react-dom_client.js?v=c7bb928f:9465
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11040
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11066
+flushPassiveEffects @ react-dom_client.js?v=c7bb928f:13150
+(anonymous) @ react-dom_client.js?v=c7bb928f:12776
+performWorkUntilDeadline @ react-dom_client.js?v=c7bb928f:36Understand this error
+api.ts:138  GET http://localhost:5173/api/analytics/expected-scores 500 (Internal Server Error)
+dispatchXhrRequest @ axios.js?v=c7bb928f:1696
+xhr @ axios.js?v=c7bb928f:1573
+dispatchRequest @ axios.js?v=c7bb928f:2107
+_request @ axios.js?v=c7bb928f:2327
+request @ axios.js?v=c7bb928f:2219
+Axios.<computed> @ axios.js?v=c7bb928f:2346
+wrap @ axios.js?v=c7bb928f:8
+getExpectedScores @ api.ts:138
+loadData @ Dashboard.tsx:18
+(anonymous) @ Dashboard.tsx:12
+react_stack_bottom_frame @ react-dom_client.js?v=c7bb928f:18567
+runWithFiberInDEV @ react-dom_client.js?v=c7bb928f:997
+commitHookEffectListMount @ react-dom_client.js?v=c7bb928f:9411
+commitHookPassiveMountEffects @ react-dom_client.js?v=c7bb928f:9465
+reconnectPassiveEffects @ react-dom_client.js?v=c7bb928f:11273
+doubleInvokeEffectsOnFiber @ react-dom_client.js?v=c7bb928f:13339
+runWithFiberInDEV @ react-dom_client.js?v=c7bb928f:997
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13312
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+commitDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13347
+flushPassiveEffects @ react-dom_client.js?v=c7bb928f:13157
+(anonymous) @ react-dom_client.js?v=c7bb928f:12776
+performWorkUntilDeadline @ react-dom_client.js?v=c7bb928f:36Understand this error
+Dashboard.tsx:24 Failed to load dashboard data AxiosError {message: 'Request failed with status code 500', name: 'AxiosError', code: 'ERR_BAD_RESPONSE', config: {…}, request: XMLHttpRequest, …}
+loadData @ Dashboard.tsx:24
+await in loadData
+(anonymous) @ Dashboard.tsx:12
+react_stack_bottom_frame @ react-dom_client.js?v=c7bb928f:18567
+runWithFiberInDEV @ react-dom_client.js?v=c7bb928f:997
+commitHookEffectListMount @ react-dom_client.js?v=c7bb928f:9411
+commitHookPassiveMountEffects @ react-dom_client.js?v=c7bb928f:9465
+reconnectPassiveEffects @ react-dom_client.js?v=c7bb928f:11273
+doubleInvokeEffectsOnFiber @ react-dom_client.js?v=c7bb928f:13339
+runWithFiberInDEV @ react-dom_client.js?v=c7bb928f:997
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13312
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+commitDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13347
+flushPassiveEffects @ react-dom_client.js?v=c7bb928f:13157
+(anonymous) @ react-dom_client.js?v=c7bb928f:12776
+performWorkUntilDeadline @ react-dom_client.js?v=c7bb928f:36Understand this error
+api.ts:143  GET http://localhost:5173/api/analytics/risks 500 (Internal Server Error)
+dispatchXhrRequest @ axios.js?v=c7bb928f:1696
+xhr @ axios.js?v=c7bb928f:1573
+dispatchRequest @ axios.js?v=c7bb928f:2107
+_request @ axios.js?v=c7bb928f:2327
+request @ axios.js?v=c7bb928f:2219
+Axios.<computed> @ axios.js?v=c7bb928f:2346
+wrap @ axios.js?v=c7bb928f:8
+getRisks @ api.ts:143
+loadData @ Dashboard.tsx:19
+(anonymous) @ Dashboard.tsx:12
+react_stack_bottom_frame @ react-dom_client.js?v=c7bb928f:18567
+runWithFiberInDEV @ react-dom_client.js?v=c7bb928f:997
+commitHookEffectListMount @ react-dom_client.js?v=c7bb928f:9411
+commitHookPassiveMountEffects @ react-dom_client.js?v=c7bb928f:9465
+reconnectPassiveEffects @ react-dom_client.js?v=c7bb928f:11273
+doubleInvokeEffectsOnFiber @ react-dom_client.js?v=c7bb928f:13339
+runWithFiberInDEV @ react-dom_client.js?v=c7bb928f:997
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13312
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+commitDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13347
+flushPassiveEffects @ react-dom_client.js?v=c7bb928f:13157
+(anonymous) @ react-dom_client.js?v=c7bb928f:12776
+performWorkUntilDeadline @ react-dom_client.js?v=c7bb928f:36Understand this error
+api.ts:103  GET http://localhost:5173/api/courses 500 (Internal Server Error)
+dispatchXhrRequest @ axios.js?v=c7bb928f:1696
+xhr @ axios.js?v=c7bb928f:1573
+dispatchRequest @ axios.js?v=c7bb928f:2107
+_request @ axios.js?v=c7bb928f:2327
+request @ axios.js?v=c7bb928f:2219
+Axios.<computed> @ axios.js?v=c7bb928f:2346
+wrap @ axios.js?v=c7bb928f:8
+getCourses @ api.ts:103
+loadInitialData @ Progress.tsx:33
+(anonymous) @ Progress.tsx:15
+react_stack_bottom_frame @ react-dom_client.js?v=c7bb928f:18567
+runWithFiberInDEV @ react-dom_client.js?v=c7bb928f:997
+commitHookEffectListMount @ react-dom_client.js?v=c7bb928f:9411
+commitHookPassiveMountEffects @ react-dom_client.js?v=c7bb928f:9465
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11040
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11066
+flushPassiveEffects @ react-dom_client.js?v=c7bb928f:13150
+(anonymous) @ react-dom_client.js?v=c7bb928f:12776
+performWorkUntilDeadline @ react-dom_client.js?v=c7bb928f:36Understand this error
+Progress.tsx:39 Failed to load data AxiosError {message: 'Request failed with status code 500', name: 'AxiosError', code: 'ERR_BAD_RESPONSE', config: {…}, request: XMLHttpRequest, …}
+loadInitialData @ Progress.tsx:39
+await in loadInitialData
+(anonymous) @ Progress.tsx:15
+react_stack_bottom_frame @ react-dom_client.js?v=c7bb928f:18567
+runWithFiberInDEV @ react-dom_client.js?v=c7bb928f:997
+commitHookEffectListMount @ react-dom_client.js?v=c7bb928f:9411
+commitHookPassiveMountEffects @ react-dom_client.js?v=c7bb928f:9465
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11040
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11066
+flushPassiveEffects @ react-dom_client.js?v=c7bb928f:13150
+(anonymous) @ react-dom_client.js?v=c7bb928f:12776
+performWorkUntilDeadline @ react-dom_client.js?v=c7bb928f:36Understand this error
+api.ts:133  GET http://localhost:5173/api/analytics/weak-topics 500 (Internal Server Error)
+dispatchXhrRequest @ axios.js?v=c7bb928f:1696
+xhr @ axios.js?v=c7bb928f:1573
+dispatchRequest @ axios.js?v=c7bb928f:2107
+_request @ axios.js?v=c7bb928f:2327
+request @ axios.js?v=c7bb928f:2219
+Axios.<computed> @ axios.js?v=c7bb928f:2346
+wrap @ axios.js?v=c7bb928f:8
+getWeakTopics @ api.ts:133
+loadInitialData @ Progress.tsx:34
+(anonymous) @ Progress.tsx:15
+react_stack_bottom_frame @ react-dom_client.js?v=c7bb928f:18567
+runWithFiberInDEV @ react-dom_client.js?v=c7bb928f:997
+commitHookEffectListMount @ react-dom_client.js?v=c7bb928f:9411
+commitHookPassiveMountEffects @ react-dom_client.js?v=c7bb928f:9465
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11040
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11033
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11201
+recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=c7bb928f:11010
+commitPassiveMountOnFiber @ react-dom_client.js?v=c7bb928f:11066
+flushPassiveEffects @ react-dom_client.js?v=c7bb928f:13150
+(anonymous) @ react-dom_client.js?v=c7bb928f:12776
+performWorkUntilDeadline @ react-dom_client.js?v=c7bb928f:36Understand this error
+api.ts:103  GET http://localhost:5173/api/courses 500 (Internal Server Error)
+dispatchXhrRequest @ axios.js?v=c7bb928f:1696
+xhr @ axios.js?v=c7bb928f:1573
+dispatchRequest @ axios.js?v=c7bb928f:2107
+_request @ axios.js?v=c7bb928f:2327
+request @ axios.js?v=c7bb928f:2219
+Axios.<computed> @ axios.js?v=c7bb928f:2346
+wrap @ axios.js?v=c7bb928f:8
+getCourses @ api.ts:103
+loadInitialData @ Progress.tsx:33
+(anonymous) @ Progress.tsx:15
+react_stack_bottom_frame @ react-dom_client.js?v=c7bb928f:18567
+runWithFiberInDEV @ react-dom_client.js?v=c7bb928f:997
+commitHookEffectListMount @ react-dom_client.js?v=c7bb928f:9411
+commitHookPassiveMountEffects @ react-dom_client.js?v=c7bb928f:9465
+reconnectPassiveEffects @ react-dom_client.js?v=c7bb928f:11273
+doubleInvokeEffectsOnFiber @ react-dom_client.js?v=c7bb928f:13339
+runWithFiberInDEV @ react-dom_client.js?v=c7bb928f:997
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13312
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+commitDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13347
+flushPassiveEffects @ react-dom_client.js?v=c7bb928f:13157
+(anonymous) @ react-dom_client.js?v=c7bb928f:12776
+performWorkUntilDeadline @ react-dom_client.js?v=c7bb928f:36Understand this error
+Progress.tsx:39 Failed to load data AxiosError {message: 'Request failed with status code 500', name: 'AxiosError', code: 'ERR_BAD_RESPONSE', config: {…}, request: XMLHttpRequest, …}
+loadInitialData @ Progress.tsx:39
+await in loadInitialData
+(anonymous) @ Progress.tsx:15
+react_stack_bottom_frame @ react-dom_client.js?v=c7bb928f:18567
+runWithFiberInDEV @ react-dom_client.js?v=c7bb928f:997
+commitHookEffectListMount @ react-dom_client.js?v=c7bb928f:9411
+commitHookPassiveMountEffects @ react-dom_client.js?v=c7bb928f:9465
+reconnectPassiveEffects @ react-dom_client.js?v=c7bb928f:11273
+doubleInvokeEffectsOnFiber @ react-dom_client.js?v=c7bb928f:13339
+runWithFiberInDEV @ react-dom_client.js?v=c7bb928f:997
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13312
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+commitDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13347
+flushPassiveEffects @ react-dom_client.js?v=c7bb928f:13157
+(anonymous) @ react-dom_client.js?v=c7bb928f:12776
+performWorkUntilDeadline @ react-dom_client.js?v=c7bb928f:36Understand this error
+api.ts:133  GET http://localhost:5173/api/analytics/weak-topics 500 (Internal Server Error)
+dispatchXhrRequest @ axios.js?v=c7bb928f:1696
+xhr @ axios.js?v=c7bb928f:1573
+dispatchRequest @ axios.js?v=c7bb928f:2107
+_request @ axios.js?v=c7bb928f:2327
+request @ axios.js?v=c7bb928f:2219
+Axios.<computed> @ axios.js?v=c7bb928f:2346
+wrap @ axios.js?v=c7bb928f:8
+getWeakTopics @ api.ts:133
+loadInitialData @ Progress.tsx:34
+(anonymous) @ Progress.tsx:15
+react_stack_bottom_frame @ react-dom_client.js?v=c7bb928f:18567
+runWithFiberInDEV @ react-dom_client.js?v=c7bb928f:997
+commitHookEffectListMount @ react-dom_client.js?v=c7bb928f:9411
+commitHookPassiveMountEffects @ react-dom_client.js?v=c7bb928f:9465
+reconnectPassiveEffects @ react-dom_client.js?v=c7bb928f:11273
+doubleInvokeEffectsOnFiber @ react-dom_client.js?v=c7bb928f:13339
+runWithFiberInDEV @ react-dom_client.js?v=c7bb928f:997
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13312
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13317
+commitDoubleInvokeEffectsInDEV @ react-dom_client.js?v=c7bb928f:13347
+flushPassiveEffects @ react-dom_client.js?v=c7bb928f:13157
+(anonymous) @ react-dom_client.js?v=c7bb928f:12776
+performWorkUntilDeadline @ react-dom_client.js?v=c7bb928f:36Understand this error

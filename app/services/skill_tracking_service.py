@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Dict
 from datetime import datetime, timedelta
 from app.models.models import SkillHistory
 from app.storage.database import Database, SkillHistoryDB, TopicDB
@@ -13,14 +13,15 @@ class SkillTrackingService:
         self.decay_start_days = 7
         self.decay_rate_per_day = 0.5
     
-    def record_skill_change(self, topic_id: int, new_skill: float, reason: str) -> SkillHistory:
+    def record_skill_change(self, topic_id: int, new_skill: float, reason: str, previous_skill: Optional[float] = None) -> SkillHistory:
         session = self.db.get_session()
         try:
             topic = session.query(TopicDB).filter(TopicDB.id == topic_id).first()
             if not topic:
                 raise ValueError("Topic not found")
             
-            previous_skill = topic.skill_level
+            if previous_skill is None:
+                previous_skill = topic.skill_level
             
             if reason == "self-assessment":
                 actual_change = (new_skill - previous_skill) * self.self_assessment_weight
@@ -131,5 +132,76 @@ class SkillTrackingService:
                             self.record_skill_change(topic.id, new_skill, "decay")
             
             session.commit()
+        finally:
+            session.close()
+    
+    def apply_decay_to_all(self) -> List[Dict]:
+        """Apply skill decay and return results"""
+        from app.storage.database import StudySessionDB
+        
+        session = self.db.get_session()
+        results = []
+        try:
+            topics = session.query(TopicDB).all()
+            cutoff_date = datetime.now() - timedelta(days=self.decay_start_days)
+            
+            for topic in topics:
+                last_session = session.query(StudySessionDB).filter(
+                    StudySessionDB.topic_id == topic.id,
+                    StudySessionDB.end_time.isnot(None)
+                ).order_by(StudySessionDB.end_time.desc()).first()
+                
+                if not last_session or last_session.end_time < cutoff_date:
+                    days_inactive = (datetime.now() - last_session.end_time).days if last_session else 30
+                    decay_days = max(0, days_inactive - self.decay_start_days)
+                    
+                    if decay_days > 0:
+                        decay_amount = min(topic.skill_level * 0.3, decay_days * self.decay_rate_per_day)
+                        new_skill = max(0, topic.skill_level - decay_amount)
+                        
+                        if abs(new_skill - topic.skill_level) > 0.1:
+                            old_skill = topic.skill_level
+                            self.record_skill_change(topic.id, new_skill, "decay", old_skill)
+                            results.append({
+                                "topic_id": topic.id,
+                                "topic_name": topic.name,
+                                "old_skill": old_skill,
+                                "new_skill": new_skill,
+                                "decay_amount": decay_amount
+                            })
+            
+            session.commit()
+            return results
+        finally:
+            session.close()
+    
+    def get_decay_eligible_topics(self) -> List[Dict]:
+        """Get topics eligible for skill decay"""
+        from app.storage.database import StudySessionDB
+        
+        session = self.db.get_session()
+        try:
+            topics = session.query(TopicDB).all()
+            cutoff_date = datetime.now() - timedelta(days=self.decay_start_days)
+            eligible = []
+            
+            for topic in topics:
+                last_session = session.query(StudySessionDB).filter(
+                    StudySessionDB.topic_id == topic.id,
+                    StudySessionDB.end_time.isnot(None)
+                ).order_by(StudySessionDB.end_time.desc()).first()
+                
+                days_inactive = (datetime.now() - last_session.end_time).days if last_session else 30
+                
+                if not last_session or last_session.end_time < cutoff_date:
+                    eligible.append({
+                        "topic_id": topic.id,
+                        "topic_name": topic.name,
+                        "current_skill": topic.skill_level,
+                        "days_inactive": days_inactive,
+                        "eligible_for_decay": days_inactive > self.decay_start_days
+                    })
+            
+            return eligible
         finally:
             session.close()

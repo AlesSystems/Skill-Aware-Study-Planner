@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Plus, ArrowLeft, Trash2, AlertTriangle } from 'lucide-react';
-import { getTopics, createTopic, getCourses, type Topic, type Course } from '../services/api';
+import { Plus, ArrowLeft, Trash2, AlertTriangle, Edit2 } from 'lucide-react';
+import { getTopics, createTopic, getCourses, deleteTopic, updateTopic, type Topic, type Course } from '../services/api';
 
 const CourseDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -10,6 +10,7 @@ const CourseDetail = () => {
   const [course, setCourse] = useState<Course | null>(null);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [editingTopic, setEditingTopic] = useState<Topic | null>(null);
 
   // Form State
   const [name, setName] = useState('');
@@ -43,20 +44,49 @@ const CourseDetail = () => {
     e.preventDefault();
     if (!id) return;
     try {
-      await createTopic({
-        course_id: parseInt(id),
-        name,
-        weight: Number(weight),
-        skill_level: Number(skill)
-      });
+      if (editingTopic) {
+        await updateTopic(editingTopic.id!, {
+          course_id: parseInt(id),
+          name,
+          weight: Number(weight),
+          skill_level: Number(skill)
+        });
+        setEditingTopic(null);
+      } else {
+        await createTopic({
+          course_id: parseInt(id),
+          name,
+          weight: Number(weight),
+          skill_level: Number(skill)
+        });
+      }
       setShowForm(false);
       setName('');
       setWeight(0.1);
       setSkill(50);
       loadData();
     } catch (error) {
-      console.error('Failed to create topic', error);
-      alert('Error creating topic');
+      console.error('Failed to create/update topic', error);
+      alert('Error saving topic');
+    }
+  };
+
+  const handleEditTopic = (topic: Topic) => {
+    setEditingTopic(topic);
+    setName(topic.name);
+    setWeight(topic.weight);
+    setSkill(topic.skill_level);
+    setShowForm(true);
+  };
+
+  const handleDeleteTopic = async (topicId: number) => {
+    if (!confirm('Are you sure you want to delete this topic?')) return;
+    try {
+      await deleteTopic(topicId);
+      loadData();
+    } catch (error) {
+      console.error('Failed to delete topic', error);
+      alert('Error deleting topic');
     }
   };
 
@@ -104,6 +134,7 @@ const CourseDetail = () => {
 
       {showForm && (
         <form onSubmit={handleCreateTopic} className="bg-gray-800 p-6 rounded-lg border border-gray-700 space-y-4 animate-fade-in">
+          <h4 className="text-lg font-semibold text-white">{editingTopic ? 'Edit Topic' : 'Add Topic'}</h4>
           <div>
             <label className="block text-sm font-medium text-gray-400 mb-1">Topic Name</label>
             <input 
@@ -144,7 +175,13 @@ const CourseDetail = () => {
           <div className="flex justify-end gap-2">
             <button 
               type="button" 
-              onClick={() => setShowForm(false)}
+              onClick={() => {
+                setShowForm(false);
+                setEditingTopic(null);
+                setName('');
+                setWeight(0.1);
+                setSkill(50);
+              }}
               className="px-4 py-2 text-gray-300 hover:text-white"
             >
               Cancel
@@ -153,7 +190,7 @@ const CourseDetail = () => {
               type="submit" 
               className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
             >
-              Save Topic
+              {editingTopic ? 'Update Topic' : 'Save Topic'}
             </button>
           </div>
         </form>
@@ -186,9 +223,20 @@ const CourseDetail = () => {
                   </div>
                 </td>
                 <td className="p-4 text-right">
-                  <button className="text-red-400 hover:text-red-300 opacity-50 hover:opacity-100 transition-opacity">
-                    <Trash2 size={18} />
-                  </button>
+                  <div className="flex gap-2 justify-end">
+                    <button 
+                      onClick={() => handleEditTopic(topic)}
+                      className="text-blue-400 hover:text-blue-300 transition-opacity"
+                    >
+                      <Edit2 size={18} />
+                    </button>
+                    <button 
+                      onClick={() => handleDeleteTopic(topic.id!)}
+                      className="text-red-400 hover:text-red-300 transition-opacity"
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}

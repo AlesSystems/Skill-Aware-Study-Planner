@@ -152,3 +152,44 @@ class QuizService:
             ]
         finally:
             session.close()
+    
+    def submit_attempt(self, quiz_id: int, answers: Dict[int, str]) -> QuizAttempt:
+        """Alias for submit_quiz_attempt to match API naming"""
+        return self.submit_quiz_attempt(quiz_id, answers)
+    
+    def get_attempts(self, quiz_id: int) -> List[QuizAttempt]:
+        """Alias for get_quiz_attempts to match API naming"""
+        return self.get_quiz_attempts(quiz_id)
+    
+    def get_topic_quiz_summary(self, topic_id: int) -> Dict:
+        """Get summary statistics for all quizzes of a topic"""
+        session = self.db.get_session()
+        try:
+            db_quizzes = session.query(QuizDB).filter(QuizDB.topic_id == topic_id).all()
+            
+            total_quizzes = len(db_quizzes)
+            total_attempts = 0
+            avg_score = 0.0
+            best_score = 0.0
+            
+            all_scores = []
+            for db_quiz in db_quizzes:
+                attempts = session.query(QuizAttemptDB).filter(
+                    QuizAttemptDB.quiz_id == db_quiz.id
+                ).all()
+                total_attempts += len(attempts)
+                all_scores.extend([att.score for att in attempts])
+            
+            if all_scores:
+                avg_score = sum(all_scores) / len(all_scores)
+                best_score = max(all_scores)
+            
+            return {
+                "topic_id": topic_id,
+                "total_quizzes": total_quizzes,
+                "total_attempts": total_attempts,
+                "average_score": avg_score,
+                "best_score": best_score
+            }
+        finally:
+            session.close()

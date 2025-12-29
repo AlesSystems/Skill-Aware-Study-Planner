@@ -128,6 +128,58 @@ class StorageService:
         finally:
             session.close()
     
+    def update_course(self, course: Course) -> Course:
+        session = self.db.get_session()
+        try:
+            db_course = session.query(CourseDB).filter(CourseDB.id == course.id).first()
+            if db_course:
+                db_course.name = course.name
+                db_course.exam_date = course.exam_date
+                session.commit()
+                session.refresh(db_course)
+                return Course(
+                    id=db_course.id,
+                    name=db_course.name,
+                    exam_date=db_course.exam_date
+                )
+            raise ValueError("Course not found")
+        finally:
+            session.close()
+    
+    def update_topic(self, topic: Topic) -> Topic:
+        session = self.db.get_session()
+        try:
+            db_topic = session.query(TopicDB).filter(TopicDB.id == topic.id).first()
+            if db_topic:
+                db_topic.course_id = topic.course_id
+                db_topic.name = topic.name
+                db_topic.weight = topic.weight
+                db_topic.skill_level = topic.skill_level
+                session.commit()
+                session.refresh(db_topic)
+                return Topic(
+                    id=db_topic.id,
+                    course_id=db_topic.course_id,
+                    name=db_topic.name,
+                    weight=db_topic.weight,
+                    skill_level=db_topic.skill_level
+                )
+            raise ValueError("Topic not found")
+        finally:
+            session.close()
+    
+    def delete_topic(self, topic_id: int) -> bool:
+        session = self.db.get_session()
+        try:
+            db_topic = session.query(TopicDB).filter(TopicDB.id == topic_id).first()
+            if db_topic:
+                session.delete(db_topic)
+                session.commit()
+                return True
+            return False
+        finally:
+            session.close()
+    
     def delete_course(self, course_id: int) -> bool:
         session = self.db.get_session()
         try:

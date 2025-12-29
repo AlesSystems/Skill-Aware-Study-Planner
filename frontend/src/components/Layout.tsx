@@ -1,5 +1,5 @@
 import { Outlet, Link } from 'react-router-dom';
-import { BookOpen, BarChart2, CheckSquare, Settings, Home } from 'lucide-react';
+import { BookOpen, BarChart2, CheckSquare, Settings, Home, Clock, FileQuestion } from 'lucide-react';
 
 const Layout = () => {
   return (
@@ -23,6 +23,14 @@ const Layout = () => {
           <Link to="/plan" className="flex items-center space-x-3 p-2 rounded hover:bg-gray-700 transition-colors">
             <CheckSquare size={20} />
             <span>Daily Plan</span>
+          </Link>
+          <Link to="/quizzes" className="flex items-center space-x-3 p-2 rounded hover:bg-gray-700 transition-colors">
+            <FileQuestion size={20} />
+            <span>Quizzes</span>
+          </Link>
+          <Link to="/sessions" className="flex items-center space-x-3 p-2 rounded hover:bg-gray-700 transition-colors">
+            <Clock size={20} />
+            <span>Study Sessions</span>
           </Link>
           <Link to="/progress" className="flex items-center space-x-3 p-2 rounded hover:bg-gray-700 transition-colors">
             <BarChart2 size={20} />

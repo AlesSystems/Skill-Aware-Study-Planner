@@ -5,6 +5,8 @@ import Courses from './pages/Courses';
 import CourseDetail from './pages/CourseDetail';
 import DailyPlan from './pages/DailyPlan';
 import Progress from './pages/Progress';
+import Quizzes from './pages/Quizzes';
+import StudySessions from './pages/StudySessions';
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
           <Route path="courses/:id" element={<CourseDetail />} />
           <Route path="plan" element={<DailyPlan />} />
           <Route path="progress" element={<Progress />} />
+          <Route path="quizzes" element={<Quizzes />} />
+          <Route path="sessions" element={<StudySessions />} />
         </Route>
       </Routes>
     </Router>
